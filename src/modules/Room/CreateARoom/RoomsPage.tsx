@@ -1,4 +1,4 @@
-import { useUser } from '@/modules/User';
+import { UserProfile, useUser } from '@/modules/User';
 import { Stack } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { CreateARoomSection, JoinARoomSection } from './Sections';
@@ -6,6 +6,15 @@ import { CreateARoomSection, JoinARoomSection } from './Sections';
 export const RoomsPage = () => {
   const { data: userData } = useUser();
   const router = useRouter();
+  const isHaveUserName = !!userData;
+
+  if (!isHaveUserName) {
+    return (
+      <Stack flexGrow={1} justifyContent={'center'} alignItems={'center'}>
+        <UserProfile customDisplayText={'Please set your username first'} />
+      </Stack>
+    );
+  }
   return (
     <Stack flexGrow={1} gap={0}>
       {/* Creat a Room  */}
@@ -33,6 +42,7 @@ export const RoomsPage = () => {
         lg={{ paddingBlock: 16, paddingInline: 32 }}
         md={{ paddingBlock: 8, paddingInline: 16 }}
         alignItems={'center'}
+        justifyContent={'center'}
         flexGrow={1}
       >
         <JoinARoomSection router={router} userData={userData} />

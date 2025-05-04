@@ -7,7 +7,7 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 
-const UserIdKey = 'userId' as const;
+const UserIdKey = 'userIdv2' as const;
 
 export const getLocalStorageInfo = (key: string) => {
   if (typeof window !== 'undefined') {

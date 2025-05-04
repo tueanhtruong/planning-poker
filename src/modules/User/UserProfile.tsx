@@ -60,6 +60,7 @@ const ModalAddNewUser = ({
   onCreateSuccess: () => void;
   setOpen: (open: boolean) => void;
 }) => {
+  const [errorMessage, setErrorMessage] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const isUpdate = !!data;
   const { upsert, isPending } = useUpsertUser({
@@ -71,8 +72,9 @@ const ModalAddNewUser = ({
   const handleSaveUser = async () => {
     const name = inputRef.current?.value;
     if (!name) {
-      return;
+      return setErrorMessage('Please enter your name');
     }
+    if (errorMessage) setErrorMessage('');
     upsert({
       id: data?.id,
       displayName: name,
@@ -113,6 +115,20 @@ const ModalAddNewUser = ({
                   defaultValue={data?.displayName}
                   fontSize={'md'}
                 />
+                {errorMessage ? (
+                  <Text
+                    color={'red.500'}
+                    fontSize={'xs'}
+                    md={{
+                      fontSize: 'sm',
+                    }}
+                    alignSelf={'flex-start'}
+                    fontWeight={'light'}
+                    marginBlockStart={-2}
+                  >
+                    {errorMessage}
+                  </Text>
+                ) : undefined}
                 <Button
                   loading={isPending}
                   onClick={handleSaveUser}
