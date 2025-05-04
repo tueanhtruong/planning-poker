@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins');
+
+:root {
+  --darkCardBg: #bd0f72;
+  --lightCardBg: #dc7fb4;
+  --darkCardBg50: #bd0f7250;
+  --lightCardBg50: #dc7fb450;
+  --contentCardBg: #cc4b90;
+  --navHeight: 80px;
+  --bgColor: #e2f2f1;
+}
+
+/*
+  1. Use a more-intuitive box-sizing model.
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/*
+  2. Remove default margin
+*/
+* {
+  margin: 0;
+}
+
+/*
+  3. Allow percentage-based heights in the application
+*/
+html,
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* font-family: 'Courier New', Courier, monospace; */
+}
+
+/*
+  Typographic tweaks!
+  4. Add accessible line-height
+  5. Improve text rendering
+*/
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  flex-grow: 1;
+}
+
+/*
+  6. Improve media defaults
+*/
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/*
+  7. Remove built-in form typography styles
+*/
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/*
+  8. Avoid text overflows
+*/
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/*
+  9. Create a root stacking context
+*/
+#root,
+#__next {
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+body {
+  background-color: var(--bgColor);
+}
+
+.wobble-animation {
+  animation: myAnim 2s ease 0s 1 normal forwards;
+}
+
+@keyframes myAnim {
+  0%,
+  100% {
+    transform: translateX(0%);
+    transform-origin: 50% 50%;
+  }
+
+  15% {
+    transform: translateX(-10px) rotate(-3deg);
+  }
+
+  30% {
+    transform: translateX(5px) rotate(3deg);
+  }
+
+  45% {
+    transform: translateX(-3px) rotate(-1.8deg);
+  }
+
+  60% {
+    transform: translateX(3px) rotate(1.2deg);
+  }
+
+  75% {
+    transform: translateX(-2px) rotate(-0.6deg);
+  }
+}
+.card {
+  display: block;
+  width: 72px;
+  height: 94px;
+  transition: all 0.5s;
+  position: relative;
+
+  .front,
+  .back {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 5px silver);
+    border-radius: 12px;
+    backface-visibility: hidden;
+    transition: all 0.5s;
+  }
+
+  .back {
+    border: 4px solid #fff;
+    background-size: 16px 16px;
+    transform: rotateY(-180deg);
+    background-image: conic-gradient(
+      var(--darkCardBg50) 25%,
+      var(--lightCardBg50) 25%,
+      var(--lightCardBg50) 50%,
+      var(--darkCardBg50) 50%,
+      var(--darkCardBg50) 75%,
+      var(--lightCardBg50) 75%
+    );
+  }
+
+  .front {
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+  }
+}
+
+.card-voted {
+  .back {
+    background-image: conic-gradient(
+      var(--darkCardBg) 25%,
+      var(--lightCardBg) 25%,
+      var(--lightCardBg) 50%,
+      var(--darkCardBg) 50%,
+      var(--darkCardBg) 75%,
+      var(--lightCardBg) 75%
+    );
+  }
+}
+
+.card-hidden {
+  .front {
+    transform: rotateY(180deg);
+  }
+
+  .back {
+    transform: rotateY(0deg);
+  }
+}
+
+.glow-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.glow-button:before {
+  content: '';
+  background: linear-gradient(
+    45deg,
+    #ff6f6f,
+    #ffaa64,
+    #fffb00,
+    #48ff00,
+    #00ffd5,
+    #657fff,
+    #b672ff,
+    #ff7ae2,
+    #ff6f6f
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing 20s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 0.375rem;
+}
+
+.glow-button:active {
+  color: #000;
+}
+
+.glow-button:active:after {
+  background: transparent;
+}
+
+.glow-button-action:before {
+  opacity: 1;
+}
+
+.glow-button:after {
+  z-index: -1;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  left: 0;
+  top: 0;
+  border-radius: 0.375rem;
+}
+
+@keyframes glowing {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}

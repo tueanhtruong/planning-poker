@@ -1,0 +1,5 @@
+packages/**/dist
+apps/**/dist
+.eslintrc.cjs
+dist
+node_modules
