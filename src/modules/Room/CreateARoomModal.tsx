@@ -120,10 +120,7 @@ type RoomSectionProps = {
   router: AppRouterInstance;
 };
 
-export const CreateARoomSection: FC<RoomSectionProps> = ({
-  userData,
-  router,
-}) => {
+const CreateARoomSection: FC<RoomSectionProps> = ({ userData, router }) => {
   const { upsert: createRoom, isPending: creating } = useUpsertRoom();
   const { upsert: joinRoom, isPending: joining } = useJoinRoom();
   // const router = useRouter();
@@ -183,10 +180,7 @@ export const CreateARoomSection: FC<RoomSectionProps> = ({
   );
 };
 
-export const JoinARoomSection: FC<RoomSectionProps> = ({
-  userData,
-  router,
-}) => {
+const JoinARoomSection: FC<RoomSectionProps> = ({ userData, router }) => {
   const { upsert: joinRoom, isPending: joining } = useJoinRoom();
 
   const [roomId, setRoomId] = useState('');
