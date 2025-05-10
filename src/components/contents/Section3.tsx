@@ -61,7 +61,7 @@ export const Section3 = () => {
               <List.Indicator asChild color="green.500">
                 <FaRegCheckCircle />
               </List.Indicator>
-              <Flex gap={2}>
+              <Flex gap={2} flexWrap={'wrap'}>
                 <Text fontWeight={'bold'}>
                   Real-time Multiplayer instantly.
                 </Text>
@@ -73,7 +73,7 @@ export const Section3 = () => {
               <List.Indicator asChild color="green.500">
                 <FaRegCheckCircle />
               </List.Indicator>
-              <Flex gap={2}>
+              <Flex gap={2} flexWrap={'wrap'}>
                 <Text fontWeight={'bold'}>Simple and Fast Setup</Text>
                 <Text>– Start a session in seconds without registration.</Text>
               </Flex>
@@ -83,7 +83,7 @@ export const Section3 = () => {
               <List.Indicator asChild color="green.500">
                 <FaRegCheckCircle />
               </List.Indicator>
-              <Flex gap={2}>
+              <Flex gap={2} flexWrap={'wrap'}>
                 <Text fontWeight={'bold'}>Mobile Friendly</Text>
                 <Text>– Play from your phone, tablet, or desktop.</Text>
               </Flex>
@@ -93,7 +93,7 @@ export const Section3 = () => {
               <List.Indicator asChild color="green.500">
                 <FaRegCheckCircle />
               </List.Indicator>
-              <Flex gap={2}>
+              <Flex gap={2} flexWrap={'wrap'}>
                 <Text fontWeight={'bold'}>Free to Use</Text>
                 <Text>
                   – No hidden fees. Planning Poker made easy for everyone.
