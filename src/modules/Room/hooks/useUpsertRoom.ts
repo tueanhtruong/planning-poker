@@ -23,7 +23,6 @@ export const useUpsertRoom = (
         participants,
         revealed: false,
       };
-      console.log('🚀 ~ mutationFn: ~ payload:', payload);
       const result = await upsertSession(payload);
       if (result) return payload;
       throw new Error('Failed to create room');

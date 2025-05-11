@@ -23,9 +23,7 @@ export const CreateARoomSection: FC<RoomSectionProps> = ({
       dispatch(event.target.value);
 
   const handleCreateRoom = async () => {
-    console.log('🚀 ~ userData:', userData);
     if (!userData) {
-      console.log('🚀 ~ return ~ userData:', userData);
       return;
     }
     createRoom(
