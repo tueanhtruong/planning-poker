@@ -27,7 +27,9 @@ export const watchSession = (
 };
 
 export const upsertSession = async (session: SessionType) => {
-  await set(ref(database, `sessions/${session.id}`), session);
+  return await set(ref(database, `sessions/${session.id}`), session)
+    .then(() => true)
+    .catch(() => false);
 };
 
 export const checkSessionExists = async (sessionId: string) => {
