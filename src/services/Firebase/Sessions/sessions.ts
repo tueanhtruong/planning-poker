@@ -1,4 +1,4 @@
-import { off, onValue, ref, remove, set } from 'firebase/database';
+import { get, off, onValue, ref, remove, set } from 'firebase/database';
 import { database } from '../database';
 
 export type ParticipantType = {
@@ -28,6 +28,16 @@ export const watchSession = (
 
 export const upsertSession = async (session: SessionType) => {
   await set(ref(database, `sessions/${session.id}`), session);
+};
+
+export const checkSessionExists = async (sessionId: string) => {
+  const sessionRef = ref(database, `sessions/${sessionId}`);
+  const snapshot = await get(sessionRef);
+  const isExists = snapshot.exists();
+  if (!isExists) {
+    throw new Error('Session does not exist');
+  }
+  return isExists;
 };
 
 export const upsertParticipant = async (

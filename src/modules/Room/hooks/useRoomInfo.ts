@@ -32,15 +32,21 @@ export const useRoomInfo = (
       };
     },
     enabled: false,
+
     ...rest,
   });
 
   useEffect(() => {
-    if (!data) refetch();
+    refetch();
     return () => {
       console.log('Unsubscribing from room data');
       data?.unsubscribe();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!data) refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 

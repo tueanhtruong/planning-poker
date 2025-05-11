@@ -2,7 +2,7 @@ import { PATHS, UserType } from '@/services';
 import { Button, Input, Stack, Text } from '@chakra-ui/react';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
-import { useJoinRoom, useUpsertRoom } from '../hooks';
+import { useCheckSessionExists, useJoinRoom, useUpsertRoom } from '../hooks';
 
 type RoomSectionProps = {
   userData?: UserType;
@@ -23,6 +23,7 @@ export const CreateARoomSection: FC<RoomSectionProps> = ({
       dispatch(event.target.value);
 
   const handleCreateRoom = async () => {
+    console.log('🚀 ~ userData:', userData);
     if (!userData) {
       return;
     }
@@ -87,6 +88,7 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
   userData,
   router,
 }) => {
+  const { upsert: checkRoom, isPending: checking } = useCheckSessionExists();
   const { upsert: joinRoom, isPending: joining } = useJoinRoom();
 
   const [roomId, setRoomId] = useState('');
@@ -99,14 +101,26 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
     if (!userData) {
       return;
     }
-    joinRoom(
+    checkRoom(
       {
         roomId,
-        userId: userData.id,
       },
       {
         onSuccess() {
-          router.push(`/${PATHS.ROOMS}/${roomId}`);
+          joinRoom(
+            {
+              roomId,
+              userId: userData.id,
+            },
+            {
+              onSuccess() {
+                router.push(`/${PATHS.ROOMS}/${roomId}`);
+              },
+            },
+          );
+        },
+        onError() {
+          alert('Room not found');
         },
       },
     );
@@ -140,7 +154,7 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
       <Button
         width={'fit-content'}
         disabled={!roomId}
-        loading={joining}
+        loading={joining || checking}
         onClick={handleJoinRoom}
         alignSelf={'flex-end'}
       >

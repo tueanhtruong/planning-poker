@@ -1,3 +1,4 @@
+export * from './useCheckSessionExists';
 export * from './useJoinRoom';
 export * from './useLeaveRoom';
 export * from './useReveal';
