@@ -25,6 +25,7 @@ export const CreateARoomSection: FC<RoomSectionProps> = ({
   const handleCreateRoom = async () => {
     console.log('🚀 ~ userData:', userData);
     if (!userData) {
+      console.log('🚀 ~ return ~ userData:', userData);
       return;
     }
     createRoom(
