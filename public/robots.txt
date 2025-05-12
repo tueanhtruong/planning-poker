@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://planning-poker-delta.vercel.app/
+
+# Sitemaps
+Sitemap: https://planning-poker-delta.vercel.app/sitemap.xml
