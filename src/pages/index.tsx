@@ -15,7 +15,6 @@ const Home = () => {
           content="Planning Poker, Scrum, Agile estimation, sprint planning, scrum poker, agile tools, story points"
         />
 
-        {/* Open Graph (Facebook, LinkedIn, etc.) */}
         <meta
           property="og:title"
           content="Agile Planning Poker – Scrum Estimation Tool"
