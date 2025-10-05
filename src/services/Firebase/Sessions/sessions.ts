@@ -4,6 +4,7 @@ import { database } from '../database';
 export type ParticipantType = {
   vote: string;
   id: string;
+  votes: string[];
 };
 
 export type SessionType = {
@@ -73,6 +74,21 @@ export const participantVote = async ({
   await set(
     ref(database, `sessions/${sessionId}/participants/${participantId}/vote`),
     vote,
+  );
+};
+
+export const participantVoteV2 = async ({
+  sessionId,
+  participantId,
+  votes,
+}: {
+  sessionId: string;
+  participantId: string;
+  votes: string[];
+}) => {
+  await set(
+    ref(database, `sessions/${sessionId}/participants/${participantId}/votes`),
+    votes,
   );
 };
 

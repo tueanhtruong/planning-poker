@@ -261,3 +261,41 @@ body {
     background-position: 0 0;
   }
 }
+
+.card-re-voted {
+  /* box-shadow: 0 0 8px 4px gold; */
+  -webkit-animation: pulse 1.6s infinite;
+  -moz-animation: pulse 1.6s infinite;
+  animation: pulse 1.6s infinite;
+  background-color: rgb(255, 240, 180) !important;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 gold;
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0 12px rgba(204, 169, 44, 0);
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 gold;
+    box-shadow: 0 0 0 0 gold;
+  }
+  70% {
+    -moz-box-shadow: 0 0 0 12px rgba(204, 169, 44, 0);
+    box-shadow: 0 0 0 12px rgba(204, 169, 44, 0);
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+    box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+  }
+}
+
+.tooltip-content {
+  font-size: 16px;
+}

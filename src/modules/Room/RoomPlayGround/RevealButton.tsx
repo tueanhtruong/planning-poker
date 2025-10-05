@@ -3,6 +3,7 @@ import { Button } from '@chakra-ui/react';
 import classNames from 'classnames';
 import { FC } from 'react';
 import { useReveal, useUpsertRoom } from '../hooks';
+import { isVoted } from './helpers';
 
 type RevealButtonProps = {
   roomData: SessionType;
@@ -14,7 +15,7 @@ export const RevealButton: FC<RevealButtonProps> = ({ roomData }) => {
   const { id: roomId, participants = {}, revealed } = roomData;
 
   const hasSomeVoted = Object.values(participants).some((participant) =>
-    Boolean(participant.vote),
+    isVoted(participant.votes),
   );
 
   const handleClick = () => {
@@ -30,7 +31,7 @@ export const RevealButton: FC<RevealButtonProps> = ({ roomData }) => {
       participants: Object.fromEntries(
         Object.entries(participants).map(([key, participant]) => [
           key,
-          { ...participant, id: key, vote: '' },
+          { ...participant, id: key, vote: '', votes: [] },
         ]),
       ),
     };

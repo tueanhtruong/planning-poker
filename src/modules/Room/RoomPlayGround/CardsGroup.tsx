@@ -2,7 +2,8 @@ import { Button, Flex, Spinner, Text } from '@chakra-ui/react';
 
 import { useConfig } from '@/modules/Config/hook';
 import { SessionType } from '@/services';
-import { useVote } from '../hooks';
+import { useVoteV2 } from '../hooks';
+import { getLastVote } from './helpers';
 
 type CardsGroupProps = {
   revealed: boolean;
@@ -11,9 +12,15 @@ type CardsGroupProps = {
   participants: SessionType['participants'];
 };
 
-const InnerCardsGroup = ({ roomId, userId, participants }: CardsGroupProps) => {
+const InnerCardsGroup = ({
+  roomId,
+  userId,
+  participants,
+  revealed,
+}: CardsGroupProps) => {
   const { data, isFetching } = useConfig();
-  const { upsert: vote } = useVote();
+  // const { upsert: vote } = useVote();
+  const { upsert: voteV2 } = useVoteV2();
   const myRecord = participants[userId];
   if (isFetching) return <Spinner size={'lg'} />;
 
@@ -21,13 +28,19 @@ const InnerCardsGroup = ({ roomId, userId, participants }: CardsGroupProps) => {
     return null;
   }
 
-  const handleCardSelect = (selectedValue: string) => () => {
-    vote({
+  const handleCardSelect = (selectedValue: string) => {
+    const currentVotes = myRecord?.votes || [];
+    const nextVotes = revealed
+      ? [...currentVotes, selectedValue]
+      : [selectedValue];
+    voteV2({
       roomId: roomId,
       userId: userId,
-      vote: selectedValue,
+      votes: nextVotes,
     });
   };
+
+  const lastVote = getLastVote(myRecord?.votes);
 
   return (
     <Flex
@@ -46,11 +59,11 @@ const InnerCardsGroup = ({ roomId, userId, participants }: CardsGroupProps) => {
         wrap={'wrap'}
       >
         {data.cards.map((card) => {
-          const isSelected = myRecord?.vote === card;
+          const isSelected = lastVote === card;
           return (
             <Button
               key={`poker-card-${card}`}
-              onClick={handleCardSelect(card)}
+              onClick={() => handleCardSelect(card)}
               flexGrow={0}
               style={{
                 border: isSelected ? '3px solid var(--darkCardBg)' : undefined,
@@ -63,7 +76,6 @@ const InnerCardsGroup = ({ roomId, userId, participants }: CardsGroupProps) => {
               variant={'subtle'}
               outlineColor={'var(--lightCardBg)'}
               outlineOffset={0}
-              // backgroundColor={'white'}
             >
               <Text margin={'auto'}>{card}</Text>
             </Button>

@@ -1,8 +1,16 @@
+import { Tooltip } from '@/components/ui/tooltip';
 import { useUser } from '@/modules/User';
 import { ParticipantType, SessionType } from '@/services';
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, Icon, Text } from '@chakra-ui/react';
 import classNames from 'classnames';
 import { FC, PropsWithChildren } from 'react';
+import { LuMessageCircleWarning } from 'react-icons/lu';
+import {
+  getAllPreviousVote,
+  getLastVote,
+  isHasReVoted,
+  isVoted,
+} from './helpers';
 type RoomPlayersProps = {
   myId: string;
   participants: SessionType['participants'];
@@ -72,7 +80,11 @@ const Player: FC<{
   revealed?: boolean;
 }> = ({ userId, participant, isMe, revealed }) => {
   const { data: userData } = useUser({ id: userId });
-  const isVoted = Boolean(participant.vote);
+  // const isVoted = Boolean(participant.vote);
+  const isVotedV2 = isVoted(participant.votes);
+  const lastVote = getLastVote(participant.votes);
+  const playerHasReVoted = isHasReVoted(participant.votes);
+  const allPreviousVote = getAllPreviousVote(participant.votes);
   const displayName = userData?.displayName ?? 'Unknown';
 
   return (
@@ -80,14 +92,16 @@ const Player: FC<{
       <div
         className={classNames(
           'card',
-          isVoted ? 'wobble-animation card-voted' : '',
-          revealed ? '' : 'card-hidden',
+          { 'card-hidden': !revealed },
+          { 'wobble-animation card-voted': isVotedV2 },
         )}
       >
         <div className="back"></div>
-        <div className="front">
+        <div
+          className={classNames('front', { 'card-re-voted': playerHasReVoted })}
+        >
           <Text fontSize={'2xl'} margin={'auto'} fontWeight={'bold'}>
-            {participant.vote || '--'}
+            {lastVote ?? '--'}
           </Text>
         </div>
       </div>
@@ -99,6 +113,18 @@ const Player: FC<{
           <Text fontWeight={'bold'} fontSize={'sm'} color={'green.500'}>
             • you
           </Text>
+        )}
+        {allPreviousVote && revealed && (
+          <Tooltip
+            content={'Previous votes: ' + allPreviousVote}
+            interactive
+            positioning={{ placement: 'top' }}
+            contentProps={{ className: 'tooltip-content' }}
+          >
+            <Icon color={'yellow.500'} fontSize={20}>
+              <LuMessageCircleWarning />
+            </Icon>
+          </Tooltip>
         )}
       </Flex>
     </Flex>

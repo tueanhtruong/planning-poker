@@ -1,4 +1,4 @@
-import { participantVote } from '@/services';
+import { participantVote, participantVoteV2 } from '@/services';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 
 type VotePayload = {
@@ -20,6 +20,38 @@ export const useVote = (
         sessionId: roomId,
         participantId: userId,
         vote,
+      });
+    },
+    ...options,
+  });
+  return {
+    data,
+    upsert: mutate,
+    isPending,
+    error,
+    reset,
+  };
+};
+
+type VotePayloadV2 = {
+  roomId: string;
+  userId: string;
+  votes: string[];
+};
+
+export const useVoteV2 = (
+  options?: UseMutationOptions<void, Error, VotePayloadV2>,
+) => {
+  const { data, mutate, error, reset, isPending } = useMutation<
+    void,
+    Error,
+    VotePayloadV2
+  >({
+    mutationFn: async ({ roomId, userId, votes }) => {
+      return participantVoteV2({
+        sessionId: roomId,
+        participantId: userId,
+        votes,
       });
     },
     ...options,
