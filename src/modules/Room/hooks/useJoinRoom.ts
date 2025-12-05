@@ -15,6 +15,7 @@ export const useJoinRoom = (
       return upsertParticipant(roomId, {
         id: userId,
         vote: '',
+        votes: [],
       });
     },
     ...options,

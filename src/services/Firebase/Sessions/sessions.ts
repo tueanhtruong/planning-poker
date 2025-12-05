@@ -1,4 +1,13 @@
-import { get, off, onValue, ref, remove, set } from 'firebase/database';
+import {
+  get,
+  limitToLast,
+  off,
+  onValue,
+  query,
+  ref,
+  remove,
+  set,
+} from 'firebase/database';
 import { database } from '../database';
 
 export type ParticipantType = {
@@ -12,6 +21,7 @@ export type SessionType = {
   name: string;
   participants: Record<string, ParticipantType>;
   revealed: boolean;
+  createdAt: number;
 };
 
 export const watchSession = (
@@ -41,6 +51,16 @@ export const checkSessionExists = async (sessionId: string) => {
     throw new Error('Session does not exist');
   }
   return isExists;
+};
+
+export const getLatestSessions = async () => {
+  const sessionsRef = ref(database, `sessions`);
+  const q = query(sessionsRef, limitToLast(3));
+  const snapshot = await get(q);
+  if (snapshot.exists()) {
+    return Object.values(snapshot.val()).reverse() as SessionType[];
+  }
+  return [];
 };
 
 export const upsertParticipant = async (

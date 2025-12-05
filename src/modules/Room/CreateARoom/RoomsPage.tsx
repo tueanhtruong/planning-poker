@@ -6,6 +6,7 @@ import { CreateARoomSection, JoinARoomSection } from './Sections';
 
 export const RoomsPage = () => {
   const { data: userData } = useUser();
+
   const router = useRouter();
   const isHaveUserName = !!userData;
 
@@ -16,6 +17,7 @@ export const RoomsPage = () => {
       </Stack>
     );
   }
+
   return (
     <Stack flexGrow={1} gap={0}>
       {/* Creat a Room  */}

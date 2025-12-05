@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://planning-poker-delta.vercel.app/
+Host: https://example.com
 
 # Sitemaps
-Sitemap: https://planning-poker-delta.vercel.app/sitemap.xml
+Sitemap: https://example.com/sitemap.xml

@@ -2,7 +2,12 @@ import { PATHS, UserType } from '@/services';
 import { Button, Input, Stack, Text } from '@chakra-ui/react';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
-import { useCheckSessionExists, useJoinRoom, useUpsertRoom } from '../hooks';
+import {
+  useCheckSessionExists,
+  useGetLastedRooms,
+  useJoinRoom,
+  useUpsertRoom,
+} from '../hooks';
 
 type RoomSectionProps = {
   userData?: UserType;
@@ -89,6 +94,7 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
 }) => {
   const { upsert: checkRoom, isPending: checking } = useCheckSessionExists();
   const { upsert: joinRoom, isPending: joining } = useJoinRoom();
+  const { data: latestRooms } = useGetLastedRooms();
 
   const [roomId, setRoomId] = useState('');
   const handleChange =
@@ -96,24 +102,25 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
     (event: React.ChangeEvent<HTMLInputElement>) =>
       dispatch(event.target.value);
 
-  const handleJoinRoom = async () => {
+  const handleJoinRoom = async (selectedRoomId?: string) => {
     if (!userData) {
       return;
     }
+    const joiningRoomId = selectedRoomId ?? roomId;
     checkRoom(
       {
-        roomId,
+        roomId: joiningRoomId,
       },
       {
         onSuccess() {
           joinRoom(
             {
-              roomId,
+              roomId: joiningRoomId,
               userId: userData.id,
             },
             {
               onSuccess() {
-                router.push(`/${PATHS.ROOMS}/${roomId}`);
+                router.push(`/${PATHS.ROOMS}/${joiningRoomId}`);
               },
             },
           );
@@ -126,39 +133,66 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
   };
   return (
     <Stack gap={4} color={'white'}>
-      <Text
-        fontSize={'3xl'}
-        md={{
-          fontSize: '4xl',
-        }}
-        lg={{
-          fontSize: '5xl',
-        }}
-        fontWeight={'semibold'}
-      >
-        Join a room to start collaborating with your team.
-      </Text>
-      <Text fontSize={'md'}>
-        Put your room ID here to join an existing room.
-      </Text>
-      <Input
-        value={roomId}
-        onChange={handleChange(setRoomId)}
-        placeholder="Enter Your Room ID"
-        fontSize={'md'}
-        _placeholder={{
-          color: 'white',
-        }}
-      />
-      <Button
-        width={'fit-content'}
-        disabled={!roomId}
-        loading={joining || checking}
-        onClick={handleJoinRoom}
-        alignSelf={'flex-end'}
-      >
-        Join Room
-      </Button>
+      <Stack gap={4} color={'white'}>
+        <Text
+          fontSize={'3xl'}
+          md={{
+            fontSize: '4xl',
+          }}
+          lg={{
+            fontSize: '5xl',
+          }}
+          fontWeight={'semibold'}
+        >
+          Join a room to start collaborating with your team.
+        </Text>
+        <Text fontSize={'md'}>
+          Put your room ID here to join an existing room.
+        </Text>
+        <Stack gap={4} color={'white'} direction={'row'}>
+          <Input
+            value={roomId}
+            onChange={handleChange(setRoomId)}
+            placeholder="Enter Your Room ID"
+            fontSize={'md'}
+            _placeholder={{
+              color: 'white',
+            }}
+          />
+          <Button
+            width={'fit-content'}
+            disabled={!roomId}
+            loading={joining || checking}
+            onClick={() => handleJoinRoom(roomId)}
+            alignSelf={'flex-end'}
+          >
+            Join Room
+          </Button>
+        </Stack>
+      </Stack>
+      {latestRooms && latestRooms.length > 0 && (
+        <Stack gap={2}>
+          <Text fontSize={'md'} fontStyle={'italic'}>
+            or join one of the latest rooms:
+          </Text>
+          <Stack gap={2}>
+            {latestRooms.map((room) => (
+              <Button
+                key={room.id}
+                // variant={'outline'}
+                color={'white'}
+                width={'fit-content'}
+                height={'32px'}
+                onClick={() => {
+                  handleJoinRoom(room.id);
+                }}
+              >
+                {room.name}
+              </Button>
+            ))}
+          </Stack>
+        </Stack>
+      )}
     </Stack>
   );
 };

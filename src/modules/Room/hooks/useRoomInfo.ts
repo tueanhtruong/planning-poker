@@ -1,4 +1,4 @@
-import { SessionType, watchSession } from '@/services';
+import { getLatestSessions, SessionType, watchSession } from '@/services';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
@@ -55,5 +55,21 @@ export const useRoomInfo = (
     isFetching,
     error,
     refetch,
+  };
+};
+
+export const useGetLastedRooms = () => {
+  const { data, error, isFetching } = useQuery<SessionType[], Error>({
+    queryKey: ['latest-rooms'],
+    queryFn: async () => {
+      const sessions = await getLatestSessions();
+      return sessions;
+    },
+  });
+
+  return {
+    data,
+    isFetching,
+    error,
   };
 };

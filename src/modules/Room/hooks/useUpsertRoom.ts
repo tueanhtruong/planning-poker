@@ -22,6 +22,7 @@ export const useUpsertRoom = (
         id: id ?? generateShortID(),
         participants,
         revealed: false,
+        createdAt: Date.now(),
       };
       const result = await upsertSession(payload);
       if (result) return payload;

@@ -2,8 +2,9 @@
 
 import { UserProfile } from '@/modules/User';
 import { UserType } from '@/services';
-import { Spinner, Stack, Text } from '@chakra-ui/react';
+import { Button, Spinner, Stack, Text } from '@chakra-ui/react';
 import { useEffect, useRef } from 'react';
+import { LuView } from 'react-icons/lu';
 import { useJoinRoom, useRoomInfo } from '../hooks';
 import { CardsGroup } from './CardsGroup';
 import { RevealButton } from './RevealButton';
@@ -13,14 +14,25 @@ import { ShareRoomModal } from './ShareRoomModal';
 type RoomPlayGroundProps = {
   id: string;
   userData?: UserType;
+  preview?: boolean;
 };
 
-export const RoomPlayGround = ({ id, userData }: RoomPlayGroundProps) => {
+export const RoomPlayGround = ({
+  id,
+  userData,
+  preview = false,
+}: RoomPlayGroundProps) => {
   const { data } = useRoomInfo({ id });
   const { upsert: joinRoom } = useJoinRoom();
 
   // This is used to prevent calling the joinRoom when user leaving room
   const calledJoinRoomRef = useRef(false);
+
+  const handlePreviewRoom = () => {
+    const baseAppUrl = window.location.origin;
+    const previewUrl = `${baseAppUrl}/preview/${id}`;
+    window.open(previewUrl, '_blank');
+  };
 
   useEffect(() => {
     if (!userData) {
@@ -78,6 +90,10 @@ export const RoomPlayGround = ({ id, userData }: RoomPlayGroundProps) => {
           {data.name}
         </Text>
         <ShareRoomModal roomId={id} />
+        <Button size={'xs'} variant={'outline'} onClick={handlePreviewRoom}>
+          <LuView />
+          Preview
+        </Button>
       </Stack>
       <RoomPlayers
         myId={userData.id}
@@ -88,13 +104,14 @@ export const RoomPlayGround = ({ id, userData }: RoomPlayGroundProps) => {
           <RevealButton roomData={data} />
         </Stack>
       </RoomPlayers>
-
-      <CardsGroup
-        userId={userData?.id ?? ''}
-        roomId={id}
-        revealed={data.revealed}
-        participants={data.participants ?? {}}
-      />
+      {preview ? null : (
+        <CardsGroup
+          userId={userData?.id ?? ''}
+          roomId={id}
+          revealed={data.revealed}
+          participants={data.participants ?? {}}
+        />
+      )}
     </Stack>
   );
 };
