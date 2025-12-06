@@ -99,6 +99,8 @@ export const RoomPlayGround = ({
         myId={userData.id}
         participants={data.participants ?? {}}
         revealed={data.revealed}
+        roomId={id}
+        flyingEmojis={data.flyingEmojis ?? {}}
       >
         <Stack>
           <RevealButton roomData={data} />

@@ -30,6 +30,11 @@ const InnerCardsGroup = ({
 
   const handleCardSelect = (selectedValue: string) => {
     const currentVotes = myRecord?.votes || [];
+    const myLastVote = getLastVote(currentVotes);
+    if (myLastVote === selectedValue) {
+      // Prevent re-voting the same value again
+      return;
+    }
     const nextVotes = revealed
       ? [...currentVotes, selectedValue]
       : [selectedValue];

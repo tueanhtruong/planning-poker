@@ -1,4 +1,5 @@
 export * from './useCheckSessionExists';
+export * from './useEmoji';
 export * from './useJoinRoom';
 export * from './useLeaveRoom';
 export * from './useReveal';

@@ -298,3 +298,50 @@ body {
 .tooltip-content {
   font-size: 16px;
 }
+
+/* Emoji picker tooltip styling */
+.emoji-picker-tooltip {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 4px;
+}
+
+/* Flying emoji animation */
+.flying-emoji {
+  animation: emoji-pulse 0.2s ease-in-out;
+}
+
+@keyframes emoji-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Emoji button hover effects */
+.emoji-button {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  font-size: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding-inline: 4px;
+  padding-block: 8px;
+  border-radius: 4px;
+  transition: transform 0.2s, background-color 0.2s;
+}
+.emoji-button:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.1) !important;
+}
+
+.emoji-button:active {
+  transform: scale(0.9) !important;
+}

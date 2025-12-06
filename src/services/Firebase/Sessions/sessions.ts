@@ -22,6 +22,14 @@ export type SessionType = {
   participants: Record<string, ParticipantType>;
   revealed: boolean;
   createdAt: number;
+  flyingEmojis: Record<string, FlyingEmojiType>;
+};
+
+export type FlyingEmojiType = {
+  id: string;
+  emoji: string;
+  fromUserId: string;
+  toUserId: string;
 };
 
 export const watchSession = (
@@ -120,4 +128,28 @@ export const revealCards = async ({
   revealed: boolean;
 }) => {
   await set(ref(database, `sessions/${sessionId}/revealed`), revealed);
+};
+
+export const sendEmoji = async ({
+  sessionId,
+  payload,
+}: {
+  sessionId: string;
+  payload: FlyingEmojiType;
+}) => {
+  await set(
+    ref(database, `sessions/${sessionId}/flyingEmojis/${payload.id}`),
+    payload,
+  );
+};
+export const removeFlyingEmoji = async ({
+  sessionId,
+  flyingEmojiId,
+}: {
+  sessionId: string;
+  flyingEmojiId: string;
+}) => {
+  await remove(
+    ref(database, `sessions/${sessionId}/flyingEmojis/${flyingEmojiId}`),
+  );
 };
