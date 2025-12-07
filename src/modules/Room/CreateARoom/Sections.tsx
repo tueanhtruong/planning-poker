@@ -1,5 +1,5 @@
 import { PATHS, UserType } from '@/services';
-import { Button, Input, Stack, Text } from '@chakra-ui/react';
+import { Button, Flex, Input, Stack, Text } from '@chakra-ui/react';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import {
@@ -102,7 +102,7 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
     (event: React.ChangeEvent<HTMLInputElement>) =>
       dispatch(event.target.value);
 
-  const handleJoinRoom = async (selectedRoomId?: string) => {
+  const handleJoinRoom = async (selectedRoomId?: string, preview?: boolean) => {
     if (!userData) {
       return;
     }
@@ -120,7 +120,9 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
             },
             {
               onSuccess() {
-                router.push(`/${PATHS.ROOMS}/${joiningRoomId}`);
+                router.push(
+                  `/${preview ? PATHS.PREVIEW : PATHS.ROOMS}/${joiningRoomId}`,
+                );
               },
             },
           );
@@ -175,20 +177,32 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
           <Text fontSize={'md'} fontStyle={'italic'}>
             or join one of the latest rooms:
           </Text>
-          <Stack gap={2}>
+          <Stack gap={2} direction={'column'}>
             {latestRooms.map((room) => (
-              <Button
-                key={room.id}
-                // variant={'outline'}
-                color={'white'}
-                width={'fit-content'}
-                height={'32px'}
-                onClick={() => {
-                  handleJoinRoom(room.id);
-                }}
-              >
-                {room.name}
-              </Button>
+              <Flex direction={'row'} gap={2} key={room.id}>
+                <Button
+                  // variant={'outline'}
+                  color={'white'}
+                  width={'fit-content'}
+                  height={'32px'}
+                  onClick={() => {
+                    handleJoinRoom(room.id);
+                  }}
+                >
+                  {room.name}
+                </Button>
+                <Button
+                  variant={'plain'}
+                  color={'white'}
+                  width={'fit-content'}
+                  height={'32px'}
+                  onClick={() => {
+                    handleJoinRoom(room.id, true);
+                  }}
+                >
+                  Preview
+                </Button>
+              </Flex>
             ))}
           </Stack>
         </Stack>

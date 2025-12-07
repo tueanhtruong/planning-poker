@@ -3,7 +3,7 @@
 import { UserProfile } from '@/modules/User';
 import { UserType } from '@/services';
 import { Button, Spinner, Stack, Text } from '@chakra-ui/react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LuView } from 'react-icons/lu';
 import { useJoinRoom, useRoomInfo } from '../hooks';
 import { CardsGroup } from './CardsGroup';
@@ -17,11 +17,44 @@ type RoomPlayGroundProps = {
   preview?: boolean;
 };
 
-export const RoomPlayGround = ({
+const WrapperRoomPlayGround = ({
   id,
   userData,
   preview = false,
 }: RoomPlayGroundProps) => {
+  const [renderPlayGround, setRenderPlayGround] = useState(false);
+
+  useEffect(() => {
+    if (!userData) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      setRenderPlayGround(true);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [userData]);
+
+  // this wrapper is check if userData is loading or not
+  // if userData is undefined, we can show a loading spinner
+  if (!userData)
+    return <UserProfile customDisplayText={'Please set your username first'} />;
+
+  // if userData is defined, we can render the RoomPlayGround after 800ms
+
+  return renderPlayGround ? (
+    <InnerRoomPlayGround id={id} userId={userData.id} preview={preview} />
+  ) : (
+    <Stack height={720} alignItems={'center'} justifyContent={'center'}>
+      <Spinner size={'xl'} />
+    </Stack>
+  );
+};
+
+export const InnerRoomPlayGround = ({
+  id,
+  preview,
+  userId,
+}: RoomPlayGroundProps & { userId: string }) => {
   const { data } = useRoomInfo({ id });
   const { upsert: joinRoom } = useJoinRoom();
 
@@ -35,16 +68,13 @@ export const RoomPlayGround = ({
   };
 
   useEffect(() => {
-    if (!userData) {
-      return;
-    }
     if (!data) {
       return;
     }
-    const isUserInRoom = Boolean(data.participants?.[userData.id]);
+    const isUserInRoom = Boolean(data.participants?.[userId]);
     // Check if the user is already in the room
     if (!isUserInRoom && !calledJoinRoomRef.current) {
-      joinRoom({ roomId: id, userId: userData.id });
+      joinRoom({ roomId: id, userId: userId });
       calledJoinRoomRef.current = true;
       return;
     }
@@ -52,11 +82,8 @@ export const RoomPlayGround = ({
       calledJoinRoomRef.current = true;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, userData]);
+  }, [data]);
 
-  if (!userData) {
-    return <UserProfile customDisplayText={'Please set your username first'} />;
-  }
   if (!data) {
     return (
       <Stack height={720} alignItems={'center'} justifyContent={'center'}>
@@ -96,7 +123,7 @@ export const RoomPlayGround = ({
         </Button>
       </Stack>
       <RoomPlayers
-        myId={userData.id}
+        myId={userId}
         participants={data.participants ?? {}}
         revealed={data.revealed}
         roomId={id}
@@ -108,12 +135,22 @@ export const RoomPlayGround = ({
       </RoomPlayers>
       {preview ? null : (
         <CardsGroup
-          userId={userData?.id ?? ''}
+          userId={userId}
           roomId={id}
           revealed={data.revealed}
           participants={data.participants ?? {}}
         />
       )}
     </Stack>
+  );
+};
+
+export const RoomPlayGround = ({
+  id,
+  userData,
+  preview = false,
+}: RoomPlayGroundProps) => {
+  return (
+    <WrapperRoomPlayGround id={id} userData={userData} preview={preview} />
   );
 };

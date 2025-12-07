@@ -10,12 +10,15 @@ const CARDS_CONFIG = [
   '5',
   '8',
   '13',
-  '20',
-  '40',
-  '100',
+  '21',
+  '44',
+  '65',
   '?',
   '☕',
+  '🏳️‍🌈',
 ];
+
+const EMOJIS_CONFIG = ['❤️', '🎉', '🔥', '😂', '👎', '🤮', '💩'];
 
 export const Config = () => {
   const { data } = useConfig();
@@ -24,6 +27,7 @@ export const Config = () => {
     if (typeof data !== 'undefined' && data === null) {
       upsert({
         cards: CARDS_CONFIG,
+        emojis: EMOJIS_CONFIG,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

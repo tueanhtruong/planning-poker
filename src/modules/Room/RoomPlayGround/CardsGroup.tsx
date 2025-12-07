@@ -1,6 +1,6 @@
 import { Button, Flex, Spinner, Text } from '@chakra-ui/react';
 
-import { useConfig } from '@/modules/Config/hook';
+import { useConfig } from '@/modules/Config';
 import { SessionType } from '@/services';
 import { useVoteV2 } from '../hooks';
 import { getLastVote } from './helpers';

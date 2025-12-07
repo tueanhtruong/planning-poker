@@ -1,3 +1,5 @@
+'use client';
+
 import { get, ref, set } from 'firebase/database';
 import { database } from '../database';
 

@@ -1,3 +1,4 @@
+import { useConfig } from '@/modules/Config';
 import { Flex } from '@chakra-ui/react';
 import { FC } from 'react';
 
@@ -8,9 +9,11 @@ type EmojiPickerProps = {
 const EMOJIS = ['❤️', '🎉', '🔥', '😂', '👎', '🤮', '💩'];
 
 export const EmojiPicker: FC<EmojiPickerProps> = ({ onEmojiClick }) => {
+  const { data } = useConfig({ enabled: false });
+
   return (
     <Flex gap={2} padding={2} flexWrap="wrap">
-      {EMOJIS.map((emoji) => (
+      {data?.emojis.map((emoji) => (
         <button
           key={`emoji-${emoji}`}
           onClick={(e) => {

@@ -1,8 +1,11 @@
+'use client';
+
 import { get, ref, set } from 'firebase/database';
 import { database } from '../database';
 
 export type ApplicationConfig = {
   cards: string[];
+  emojis: string[];
 };
 
 export const upsertConfig = async (config: ApplicationConfig) => {
