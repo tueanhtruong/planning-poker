@@ -3,6 +3,7 @@
 import { UserProfile } from '@/modules/User';
 import { UserType } from '@/services';
 import { Button, Spinner, Stack, Text } from '@chakra-ui/react';
+import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import { LuView } from 'react-icons/lu';
 import { useJoinRoom, useRoomInfo } from '../hooks';
@@ -91,57 +92,63 @@ export const InnerRoomPlayGround = ({
       </Stack>
     );
   }
-
+  const title = `${preview ? 'Preview - ' : 'Room - '}${data.name}`;
   return (
-    <Stack alignItems={'center'} flex={1} paddingBlockStart={14}>
-      <Stack
-        direction={'row'}
-        alignItems={'center'}
-        gap={4}
-        height={50}
-        position={'fixed'}
-        top={15}
-        zIndex={200}
-        left={'calc(max(50% - 512px, 0px) + 82px)'}
-        maxWidth={'calc(min(100%, 1024px) - 168px)'}
-      >
-        <Text
-          fontSize={'lg'}
-          md={{ fontSize: 'xl' }}
-          lg={{ fontSize: '2xl' }}
-          fontWeight={'bold'}
-          whiteSpace={'nowrap'}
-          textOverflow={'ellipsis'}
-          overflow={'hidden'}
+    <>
+      <Head>
+        <title>{title}</title>
+        <meta property="og:title" content={title} key="title" />
+      </Head>
+      <Stack alignItems={'center'} flex={1} paddingBlockStart={14}>
+        <Stack
+          direction={'row'}
+          alignItems={'center'}
+          gap={4}
+          height={50}
+          position={'fixed'}
+          top={15}
+          zIndex={200}
+          left={'calc(max(50% - 512px, 0px) + 82px)'}
+          maxWidth={'calc(min(100%, 1024px) - 168px)'}
         >
-          {data.name}
-        </Text>
-        <ShareRoomModal roomId={id} />
-        <Button size={'xs'} variant={'outline'} onClick={handlePreviewRoom}>
-          <LuView />
-          Preview
-        </Button>
-      </Stack>
-      <RoomPlayers
-        myId={userId}
-        participants={data.participants ?? {}}
-        revealed={data.revealed}
-        roomId={id}
-        flyingEmojis={data.flyingEmojis ?? {}}
-      >
-        <Stack>
-          <RevealButton roomData={data} />
+          <Text
+            fontSize={'lg'}
+            md={{ fontSize: 'xl' }}
+            lg={{ fontSize: '2xl' }}
+            fontWeight={'bold'}
+            whiteSpace={'nowrap'}
+            textOverflow={'ellipsis'}
+            overflow={'hidden'}
+          >
+            {data.name}
+          </Text>
+          <ShareRoomModal roomId={id} />
+          <Button size={'xs'} variant={'outline'} onClick={handlePreviewRoom}>
+            <LuView />
+            Preview
+          </Button>
         </Stack>
-      </RoomPlayers>
-      {preview ? null : (
-        <CardsGroup
-          userId={userId}
-          roomId={id}
-          revealed={data.revealed}
+        <RoomPlayers
+          myId={userId}
           participants={data.participants ?? {}}
-        />
-      )}
-    </Stack>
+          revealed={data.revealed}
+          roomId={id}
+          flyingEmojis={data.flyingEmojis ?? {}}
+        >
+          <Stack>
+            <RevealButton roomData={data} />
+          </Stack>
+        </RoomPlayers>
+        {preview ? null : (
+          <CardsGroup
+            userId={userId}
+            roomId={id}
+            revealed={data.revealed}
+            participants={data.participants ?? {}}
+          />
+        )}
+      </Stack>
+    </>
   );
 };
 

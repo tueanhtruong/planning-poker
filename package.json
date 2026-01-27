@@ -6,14 +6,19 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "postbuild": "next-sitemap --config next-sitemap.config.cjs"
+    "postbuild": "next-sitemap --config next-sitemap.config.cjs",
+    "clean": "rimraf {apps/*,packages/*,labs/*,.}/{.wireit,styled-system,dist,.turbo,.next,storybook-static,node_modules,.nyc_output,coverage} -v"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.16.1",
     "@emotion/react": "^11.14.0",
+    "@mantine/core": "^8.3.13",
+    "@mantine/dates": "^8.3.13",
+    "@mantine/hooks": "^8.3.13",
     "@tanstack/react-query": "^5.74.4",
     "@tanstack/react-query-devtools": "^5.74.6",
     "classnames": "^2.5.1",
+    "dayjs": "^1.11.19",
     "firebase": "^11.6.1",
     "next": "^15.5.7",
     "next-sitemap": "^4.2.3",
@@ -26,6 +31,7 @@
     "@types/node": "22.15.2",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
+    "rimraf": "^6.1.2",
     "typescript": "5.8.3"
   }
 }

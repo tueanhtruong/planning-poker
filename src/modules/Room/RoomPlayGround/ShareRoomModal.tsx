@@ -16,7 +16,7 @@ type ShareRoomModalProps = {
 };
 export const ShareRoomModal = ({ roomId }: ShareRoomModalProps) => {
   const baseAppUrl = window.location.origin;
-  const roomUrl = `${baseAppUrl}/room/${roomId}`;
+  const roomUrl = `${baseAppUrl}/rooms/${roomId}`;
   return (
     <Dialog.Root size="md" placement="center" motionPreset="slide-in-bottom">
       <Dialog.Trigger asChild>
