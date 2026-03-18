@@ -35,13 +35,10 @@ export const Navbar = () => {
       right={0}
       gap={16}
       alignItems={'center'}
-      backgroundColor={'var(--bgColor)'}
       zIndex={100}
-      transition={'0.2s'}
-      boxShadow={
-        isScrolled
-          ? '0px 2px 6px rgba(0, 0, 0, 0.1)'
-          : '0px 2px 6px rgba(0, 0, 0, 0)'
+      transition={'box-shadow 0.25s ease'}
+      className={
+        isScrolled ? 'navbar-glass navbar-glass-scrolled' : 'navbar-glass'
       }
     >
       <Container

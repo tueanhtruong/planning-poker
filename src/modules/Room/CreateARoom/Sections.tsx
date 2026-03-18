@@ -53,21 +53,21 @@ export const CreateARoomSection: FC<RoomSectionProps> = ({
     );
   };
   return (
-    <Stack gap={4}>
+    <Stack gap={5}>
       <Text
         fontSize={'3xl'}
-        md={{
-          fontSize: '4xl',
-        }}
-        lg={{
-          fontSize: '5xl',
-        }}
-        fontWeight={'semibold'}
+        md={{ fontSize: '4xl' }}
+        lg={{ fontSize: '5xl' }}
+        fontWeight={'bold'}
+        color={'var(--color-text-primary)'}
+        lineHeight={'1.2'}
+        style={{ letterSpacing: '-0.02em' }}
       >
-        Create a room to start collaborating with your team.
+        Create a <span className="gradient-text">room</span> to start
+        collaborating.
       </Text>
-      <Text fontSize={'md'}>
-        Set-up in seconds. All we need is a display name.
+      <Text fontSize={'md'} color={'var(--color-text-secondary)'}>
+        Set-up in seconds. All we need is a room name.
       </Text>
       <Input
         value={roomName}
@@ -76,11 +76,13 @@ export const CreateARoomSection: FC<RoomSectionProps> = ({
         fontSize={'md'}
       />
       <Button
+        className="cta-primary"
         width={'fit-content'}
         disabled={!roomName}
         loading={creating || joining}
         onClick={handleCreateRoom}
         alignSelf={'flex-end'}
+        size={'md'}
       >
         Create Room
       </Button>
@@ -134,34 +136,31 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
     );
   };
   return (
-    <Stack gap={4} color={'white'}>
-      <Stack gap={4} color={'white'}>
+    <Stack gap={5} color={'var(--color-text-primary)'}>
+      <Stack gap={4}>
         <Text
           fontSize={'3xl'}
-          md={{
-            fontSize: '4xl',
-          }}
-          lg={{
-            fontSize: '5xl',
-          }}
-          fontWeight={'semibold'}
+          md={{ fontSize: '4xl' }}
+          lg={{ fontSize: '5xl' }}
+          fontWeight={'bold'}
+          color={'var(--color-text-primary)'}
+          lineHeight={'1.2'}
+          style={{ letterSpacing: '-0.02em' }}
         >
-          Join a room to start collaborating with your team.
+          Join a <span className="gradient-text">room</span> to collaborate.
         </Text>
-        <Text fontSize={'md'}>
+        <Text fontSize={'md'} color={'var(--color-text-secondary)'}>
           Put your room ID here to join an existing room.
         </Text>
-        <Stack gap={4} color={'white'} direction={'row'}>
+        <Stack gap={4} direction={'row'}>
           <Input
             value={roomId}
             onChange={handleChange(setRoomId)}
             placeholder="Enter Your Room ID"
             fontSize={'md'}
-            _placeholder={{
-              color: 'white',
-            }}
           />
           <Button
+            className="cta-primary"
             width={'fit-content'}
             disabled={!roomId}
             loading={joining || checking}
@@ -173,18 +172,27 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
         </Stack>
       </Stack>
       {latestRooms && latestRooms.length > 0 && (
-        <Stack gap={2}>
-          <Text fontSize={'md'} fontStyle={'italic'}>
+        <Stack gap={3}>
+          <Text
+            fontSize={'sm'}
+            fontStyle={'italic'}
+            color={'var(--color-text-muted)'}
+          >
             or join one of the latest rooms:
           </Text>
           <Stack gap={2} direction={'column'}>
             {latestRooms.map((room) => (
               <Flex direction={'row'} gap={2} key={room.id}>
                 <Button
-                  // variant={'outline'}
-                  color={'white'}
+                  variant={'outline'}
+                  data-variant="outline"
                   width={'fit-content'}
                   height={'32px'}
+                  style={{
+                    borderColor: 'var(--color-border-hover)',
+                    color: 'var(--color-text-primary)',
+                    fontSize: '0.875rem',
+                  }}
                   onClick={() => {
                     handleJoinRoom(room.id);
                   }}
@@ -192,10 +200,13 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
                   {room.name}
                 </Button>
                 <Button
-                  variant={'plain'}
-                  color={'white'}
+                  variant={'ghost'}
                   width={'fit-content'}
                   height={'32px'}
+                  style={{
+                    color: 'var(--color-text-muted)',
+                    fontSize: '0.875rem',
+                  }}
                   onClick={() => {
                     handleJoinRoom(room.id, true);
                   }}

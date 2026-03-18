@@ -90,9 +90,21 @@ const ModalAddNewUser = ({
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content marginBlock={32}>
+          <Dialog.Content
+            marginBlock={32}
+            style={{
+              background: 'var(--color-bg-surface)',
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-lg)',
+            }}
+          >
             <Dialog.Header>
-              <Text fontSize={'lg'} fontWeight={'bold'}>
+              <Text
+                fontSize={'lg'}
+                fontWeight={'bold'}
+                color={'var(--color-text-primary)'}
+              >
                 {isUpdate ? 'Update' : 'Create'} Your Profile
               </Text>
             </Dialog.Header>
@@ -100,12 +112,11 @@ const ModalAddNewUser = ({
               <Stack direction={'column'} gap={4} alignItems={'flex-end'}>
                 <Text
                   fontSize={'xs'}
-                  md={{
-                    fontSize: 'sm',
-                  }}
+                  md={{ fontSize: 'sm' }}
                   alignSelf={'flex-start'}
                   fontWeight={'light'}
                   marginBlockEnd={-2}
+                  color={'var(--color-text-secondary)'}
                 >
                   Simply provide your display name.
                 </Text>
@@ -117,11 +128,9 @@ const ModalAddNewUser = ({
                 />
                 {errorMessage ? (
                   <Text
-                    color={'red.500'}
+                    color={'red.400'}
                     fontSize={'xs'}
-                    md={{
-                      fontSize: 'sm',
-                    }}
+                    md={{ fontSize: 'sm' }}
                     alignSelf={'flex-start'}
                     fontWeight={'light'}
                     marginBlockStart={-2}
@@ -130,6 +139,7 @@ const ModalAddNewUser = ({
                   </Text>
                 ) : undefined}
                 <Button
+                  className="cta-primary"
                   loading={isPending}
                   onClick={handleSaveUser}
                   width={'fit-content'}
@@ -164,14 +174,22 @@ const UserProfileDisplay = ({
         onClick={onCreate}
         fontWeight={'bold'}
         fontSize={'lg'}
-        color={'red'}
         variant={'plain'}
         marginBlock={12}
+        style={{ color: 'var(--color-cyan)', opacity: 0.9 }}
       >
         {customDisplayText}
       </Button>
     ) : (
-      <Button onClick={onCreate}>
+      <Button
+        onClick={onCreate}
+        variant={'outline'}
+        data-variant="outline"
+        style={{
+          borderColor: 'var(--color-indigo)',
+          color: 'var(--color-indigo-hover)',
+        }}
+      >
         <Text fontSize={'md'} display={'none'} md={{ display: 'unset' }}>
           Create Your Profile
         </Text>
@@ -180,7 +198,15 @@ const UserProfileDisplay = ({
     );
   }
   return (
-    <Button onClick={onUpdate} variant={'surface'}>
+    <Button
+      onClick={onUpdate}
+      variant={'outline'}
+      data-variant="outline"
+      style={{
+        borderColor: 'var(--color-border-hover)',
+        color: 'var(--color-text-primary)',
+      }}
+    >
       <Text fontSize={'md'} display={'none'} md={{ display: 'unset' }}>
         {data.displayName}
       </Text>

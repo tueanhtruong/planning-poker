@@ -25,18 +25,18 @@ const Home = () => {
         />
         <meta
           property="og:url"
-          content="https://planning-poker-delta.vercel.app/"
+          content="https://planning-poker.tue-truonga.work/"
         />
         <meta property="og:type" content="website" />
         <meta
           property="og:image"
-          content="https://planning-poker-delta.vercel.app/_next/image?url=%2Fstatic%2Flogo.webp&w=48&q=75"
+          content="https://planning-poker.tue-truonga.work/_next/image?url=%2Fstatic%2Flogo.webp&w=48&q=75"
         />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Planning Poker Guide – How to Play & Why Teams Choose Us"
+          content="Agile Planning Poker – Scrum Estimation Tool"
         />
         <meta
           name="twitter:description"
@@ -44,11 +44,11 @@ const Home = () => {
         />
         <meta
           name="twitter:image"
-          content="https://planning-poker-delta.vercel.app/_next/image?url=%2Fstatic%2Flogo.webp&w=48&q=75"
+          content="https://planning-poker.tue-truonga.work/_next/image?url=%2Fstatic%2Flogo.webp&w=48&q=75"
         />
 
         {/* Canonical URL */}
-        <link rel="canonical" href="https://planning-poker-delta.vercel.app/" />
+        <link rel="canonical" href="https://planning-poker.tue-truonga.work/" />
       </Head>
       <Section1 />
       <Section2 />

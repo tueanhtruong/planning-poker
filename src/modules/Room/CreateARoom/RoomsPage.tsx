@@ -1,6 +1,7 @@
 import { CommonContainer } from '@/components';
 import { UserProfile, useUser } from '@/modules/User';
 import { Stack } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { CreateARoomSection, JoinARoomSection } from './Sections';
 
@@ -20,41 +21,57 @@ export const RoomsPage = () => {
 
   return (
     <Stack flexGrow={1} gap={0}>
-      {/* Creat a Room  */}
-      <CommonContainer>
-        <Stack
-          direction={'column'}
-          minHeight={'100%'}
-          justifyContent={'center'}
-          alignItems={'center'}
-          flexGrow={1}
-          gapY={6}
-          width={'full'}
-          maxW={'100%'}
-          md={{ maxW: '80%' }}
-        >
-          <CreateARoomSection router={router} userData={userData} />
-        </Stack>
-      </CommonContainer>
-      {/* Join a Room */}
-      <Stack
-        backgroundColor={'var(--contentCardBg)'}
-        gapY={6}
-        alignItems={'center'}
-        justifyContent={'center'}
-        flexGrow={1}
+      {/* Create a Room */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        style={{ display: 'flex', flexGrow: 1 }}
       >
         <CommonContainer>
           <Stack
+            direction={'column'}
+            minHeight={'100%'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            flexGrow={1}
+            gapY={6}
             width={'full'}
             maxW={'100%'}
             md={{ maxW: '80%' }}
-            marginInlineStart={'auto'}
           >
-            <JoinARoomSection router={router} userData={userData} />
+            <CreateARoomSection router={router} userData={userData} />
           </Stack>
         </CommonContainer>
-      </Stack>
+      </motion.div>
+
+      {/* Join a Room */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
+        style={{ display: 'flex', flexGrow: 1 }}
+      >
+        <Stack
+          className="section-surface"
+          gapY={6}
+          alignItems={'center'}
+          justifyContent={'center'}
+          flexGrow={1}
+          borderTop={'1px solid var(--color-border)'}
+        >
+          <CommonContainer>
+            <Stack
+              width={'full'}
+              maxW={'100%'}
+              md={{ maxW: '80%' }}
+              marginInlineStart={'auto'}
+            >
+              <JoinARoomSection router={router} userData={userData} />
+            </Stack>
+          </CommonContainer>
+        </Stack>
+      </motion.div>
     </Stack>
   );
 };

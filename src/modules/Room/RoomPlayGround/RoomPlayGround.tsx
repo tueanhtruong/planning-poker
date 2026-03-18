@@ -46,7 +46,7 @@ const WrapperRoomPlayGround = ({
     <InnerRoomPlayGround id={id} userId={userData.id} preview={preview} />
   ) : (
     <Stack height={720} alignItems={'center'} justifyContent={'center'}>
-      <Spinner size={'xl'} />
+      <Spinner size={'xl'} style={{ color: 'var(--color-indigo)' }} />
     </Stack>
   );
 };
@@ -88,7 +88,7 @@ export const InnerRoomPlayGround = ({
   if (!data) {
     return (
       <Stack height={720} alignItems={'center'} justifyContent={'center'}>
-        <Spinner size={'xl'} />
+        <Spinner size={'xl'} style={{ color: 'var(--color-indigo)' }} />
       </Stack>
     );
   }
@@ -100,6 +100,7 @@ export const InnerRoomPlayGround = ({
         <meta property="og:title" content={title} key="title" />
       </Head>
       <Stack alignItems={'center'} flex={1} paddingBlockStart={14}>
+        {/* Room name header bar */}
         <Stack
           direction={'row'}
           alignItems={'center'}
@@ -110,6 +111,7 @@ export const InnerRoomPlayGround = ({
           zIndex={200}
           left={'calc(max(50% - 512px, 0px) + 82px)'}
           maxWidth={'calc(min(100%, 1024px) - 168px)'}
+          className="room-header-bar"
         >
           <Text
             fontSize={'lg'}
@@ -119,15 +121,27 @@ export const InnerRoomPlayGround = ({
             whiteSpace={'nowrap'}
             textOverflow={'ellipsis'}
             overflow={'hidden'}
+            color={'var(--color-text-primary)'}
           >
             {data.name}
           </Text>
           <ShareRoomModal roomId={id} />
-          <Button size={'xs'} variant={'outline'} onClick={handlePreviewRoom}>
+          <Button
+            size={'xs'}
+            variant={'outline'}
+            data-variant="outline"
+            onClick={handlePreviewRoom}
+            style={{
+              borderColor: 'var(--color-border-hover)',
+              color: 'var(--color-text-secondary)',
+            }}
+          >
             <LuView />
             Preview
           </Button>
         </Stack>
+
+        {/* Poker table + players */}
         <RoomPlayers
           myId={userId}
           participants={data.participants ?? {}}
@@ -135,10 +149,12 @@ export const InnerRoomPlayGround = ({
           roomId={id}
           flyingEmojis={data.flyingEmojis ?? {}}
         >
-          <Stack>
+          <Stack className="poker-table-center" padding={4}>
             <RevealButton roomData={data} />
           </Stack>
         </RoomPlayers>
+
+        {/* Voting card tray */}
         {preview ? null : (
           <CardsGroup
             userId={userId}

@@ -1,7 +1,9 @@
-import { Button, Flex, Spinner, Text } from '@chakra-ui/react';
+import { Spinner, Text } from '@chakra-ui/react';
 
 import { useConfig } from '@/modules/Config';
 import { SessionType } from '@/services';
+import { staggerChild, staggerContainer } from '@/styles/animations';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useVoteV2 } from '../hooks';
 import { getLastVote } from './helpers';
 
@@ -19,10 +21,15 @@ const InnerCardsGroup = ({
   revealed,
 }: CardsGroupProps) => {
   const { data, isFetching } = useConfig();
-  // const { upsert: vote } = useVote();
   const { upsert: voteV2 } = useVoteV2();
   const myRecord = participants[userId];
-  if (isFetching) return <Spinner size={'lg'} />;
+  if (isFetching)
+    return (
+      <Spinner
+        size={'lg'}
+        style={{ color: 'var(--color-indigo)', margin: '24px' }}
+      />
+    );
 
   if (!data) {
     return null;
@@ -32,7 +39,6 @@ const InnerCardsGroup = ({
     const currentVotes = myRecord?.votes || [];
     const myLastVote = getLastVote(currentVotes);
     if (myLastVote === selectedValue) {
-      // Prevent re-voting the same value again
       return;
     }
     const nextVotes = revealed
@@ -48,46 +54,72 @@ const InnerCardsGroup = ({
   const lastVote = getLastVote(myRecord?.votes);
 
   return (
-    <Flex
-      marginTop={'auto'}
-      direction={'column'}
-      marginBlockStart={4}
-      maxW={480}
+    <motion.div
+      style={{
+        marginTop: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        marginBlock: '16px',
+        maxWidth: '560px',
+        width: '100%',
+      }}
+      initial={{ opacity: 0, y: 32 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Text textAlign={'center'} mb={2} fontWeight={'light'}>
+      <Text
+        textAlign={'center'}
+        mb={3}
+        fontWeight={'light'}
+        fontSize={'sm'}
+        color={'var(--color-text-secondary)'}
+        style={{ letterSpacing: '0.06em', textTransform: 'uppercase' }}
+      >
         Choose your card 👇
       </Text>
-      <Flex
-        gap="2"
-        alignItems={'center'}
-        justifyContent={'center'}
-        wrap={'wrap'}
+      <motion.div
+        style={{
+          display: 'flex',
+          gap: '10px',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          padding: '16px 12px',
+          background: 'var(--color-bg-surface)',
+          border: '1px solid var(--color-border)',
+          borderRadius: 'var(--radius-lg)',
+        }}
+        variants={staggerContainer}
+        initial="initial"
+        animate="animate"
       >
-        {data.cards.map((card) => {
-          const isSelected = lastVote === card;
-          return (
-            <Button
-              key={`poker-card-${card}`}
-              onClick={() => handleCardSelect(card)}
-              flexGrow={0}
-              style={{
-                border: isSelected ? '3px solid var(--darkCardBg)' : undefined,
-              }}
-              display={'flex'}
-              justifyContent={'center'}
-              alignItems={'center'}
-              minWidth={'60px'}
-              minHeight={'80px'}
-              variant={'subtle'}
-              outlineColor={'var(--lightCardBg)'}
-              outlineOffset={0}
-            >
-              <Text margin={'auto'}>{card}</Text>
-            </Button>
-          );
-        })}
-      </Flex>
-    </Flex>
+        <AnimatePresence>
+          {data.cards.map((card) => {
+            const isSelected = lastVote === card;
+            return (
+              <motion.button
+                key={`poker-card-${card}`}
+                variants={staggerChild}
+                whileHover={{ y: -8, scale: 1.05 }}
+                whileTap={{ y: -2, scale: 0.97 }}
+                onClick={() => handleCardSelect(card)}
+                className={`voting-card${isSelected ? ' voting-card-selected' : ''}`}
+              >
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 700,
+                    fontSize: '1.1rem',
+                  }}
+                >
+                  {card}
+                </span>
+              </motion.button>
+            );
+          })}
+        </AnimatePresence>
+      </motion.div>
+    </motion.div>
   );
 };
 

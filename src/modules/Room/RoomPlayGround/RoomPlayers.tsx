@@ -1,8 +1,10 @@
 import { Tooltip } from '@/components/ui/tooltip';
 import { useUser } from '@/modules/User';
 import { FlyingEmojiType, ParticipantType, SessionType } from '@/services';
+import { playerCardVariants } from '@/styles/animations';
 import { Flex, Icon, Text } from '@chakra-ui/react';
 import classNames from 'classnames';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FC, PropsWithChildren, useCallback, useRef } from 'react';
 import { LuMessageCircleWarning, LuMessageSquareShare } from 'react-icons/lu';
 import { useRemoveEmoji, useSendEmoji } from '../hooks';
@@ -14,6 +16,7 @@ import {
   isHasReVoted,
   isVoted,
 } from './helpers';
+
 type RoomPlayersProps = {
   myId: string;
   participants: SessionType['participants'];
@@ -82,40 +85,46 @@ export const RoomPlayers: FC<PropsWithChildren<RoomPlayersProps>> = ({
         paddingBlock={4}
       >
         <Flex gap={6} wrap={'wrap'} justifyContent={'center'}>
-          {participantsData.slice(0, halfOfParticipants).map((participant) => {
-            const userId = participant.id;
-            const isMe = myId === userId;
-            return (
-              <Player
-                key={`card-user-${userId}`}
-                userId={userId}
-                isMe={isMe}
-                participant={participant}
-                revealed={revealed}
-                onSendEmoji={handleSendEmoji}
-                cardRef={isMe ? myCardRef : undefined}
-              />
-            );
-          })}
+          <AnimatePresence>
+            {participantsData
+              .slice(0, halfOfParticipants)
+              .map((participant) => {
+                const userId = participant.id;
+                const isMe = myId === userId;
+                return (
+                  <Player
+                    key={`card-user-${userId}`}
+                    userId={userId}
+                    isMe={isMe}
+                    participant={participant}
+                    revealed={revealed}
+                    onSendEmoji={handleSendEmoji}
+                    cardRef={isMe ? myCardRef : undefined}
+                  />
+                );
+              })}
+          </AnimatePresence>
         </Flex>
         {children}
         {!isRoomHasOneParticipant ? (
           <Flex gap={6} wrap={'wrap'} justifyContent={'center'}>
-            {participantsData.slice(halfOfParticipants).map((participant) => {
-              const userId = participant.id;
-              const isMe = myId === userId;
-              return (
-                <Player
-                  key={`card-user-${userId}`}
-                  userId={userId}
-                  isMe={isMe}
-                  participant={participant}
-                  revealed={revealed}
-                  onSendEmoji={handleSendEmoji}
-                  cardRef={isMe ? myCardRef : undefined}
-                />
-              );
-            })}
+            <AnimatePresence>
+              {participantsData.slice(halfOfParticipants).map((participant) => {
+                const userId = participant.id;
+                const isMe = myId === userId;
+                return (
+                  <Player
+                    key={`card-user-${userId}`}
+                    userId={userId}
+                    isMe={isMe}
+                    participant={participant}
+                    revealed={revealed}
+                    onSendEmoji={handleSendEmoji}
+                    cardRef={isMe ? myCardRef : undefined}
+                  />
+                );
+              })}
+            </AnimatePresence>
           </Flex>
         ) : undefined}
       </Flex>
@@ -157,14 +166,20 @@ const Player: FC<{
       className={classNames(
         'card',
         { 'card-hidden': !revealed },
-        { 'wobble-animation card-voted': isVotedV2 },
+        { 'card-voted': isVotedV2 },
       )}
     >
       <div className="back"></div>
       <div
         className={classNames('front', { 'card-re-voted': playerHasReVoted })}
       >
-        <Text fontSize={'2xl'} margin={'auto'} fontWeight={'bold'}>
+        <Text
+          fontSize={'2xl'}
+          margin={'auto'}
+          fontWeight={'bold'}
+          color={revealed ? 'var(--color-text-primary)' : 'transparent'}
+          style={{ fontFamily: "'JetBrains Mono', monospace" }}
+        >
           {lastVote ?? '--'}
         </Text>
       </div>
@@ -172,40 +187,78 @@ const Player: FC<{
   );
 
   return (
-    <Flex direction={'column'} gap={1.5} alignItems={'center'}>
-      {cardElement}
-      <Flex gap={1} alignItems={'center'}>
-        <Text fontWeight={''} fontSize={'sm'}>
-          {displayName}
-        </Text>
-        {isMe ? (
-          <Text fontWeight={'bold'} fontSize={'sm'} color={'green.500'}>
-            • you
+    <motion.div
+      variants={playerCardVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      layout
+    >
+      <Flex direction={'column'} gap={1.5} alignItems={'center'}>
+        {cardElement}
+        <Flex gap={1} alignItems={'center'}>
+          <Text
+            fontWeight={'medium'}
+            fontSize={'sm'}
+            color={'var(--color-text-secondary)'}
+          >
+            {displayName}
           </Text>
-        ) : (
-          <Tooltip
-            content={<EmojiPicker onEmojiClick={handleEmojiClick} />}
-            interactive
-            contentProps={{ className: 'emoji-picker-tooltip' }}
-          >
-            <Icon color={'blue.500'} fontSize={20}>
-              <LuMessageSquareShare />
-            </Icon>
-          </Tooltip>
-        )}
-        {allPreviousVote && revealed && (
-          <Tooltip
-            content={'Previous votes: ' + allPreviousVote}
-            interactive
-            positioning={{ placement: 'top' }}
-            contentProps={{ className: 'tooltip-content' }}
-          >
-            <Icon color={'yellow.500'} fontSize={20}>
-              <LuMessageCircleWarning />
-            </Icon>
-          </Tooltip>
-        )}
+          {isMe ? (
+            <Text
+              fontWeight={'bold'}
+              fontSize={'sm'}
+              className="player-voted-dot"
+            >
+              • you
+            </Text>
+          ) : (
+            <Tooltip
+              content={<EmojiPicker onEmojiClick={handleEmojiClick} />}
+              interactive
+              contentProps={{ className: 'emoji-picker-tooltip' }}
+            >
+              <Icon
+                style={{
+                  color: 'var(--color-indigo-hover)',
+                  cursor: 'pointer',
+                }}
+                fontSize={18}
+              >
+                <LuMessageSquareShare />
+              </Icon>
+            </Tooltip>
+          )}
+          {allPreviousVote && revealed && (
+            <Tooltip
+              content={'Previous votes: ' + allPreviousVote}
+              interactive
+              positioning={{ placement: 'top' }}
+              contentProps={{ className: 'tooltip-content' }}
+            >
+              <Icon
+                style={{ color: 'var(--color-amber)', cursor: 'pointer' }}
+                fontSize={18}
+              >
+                <LuMessageCircleWarning />
+              </Icon>
+            </Tooltip>
+          )}
+        </Flex>
+        {/* Voted / waiting indicator dot */}
+        <div
+          style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            background: isVotedV2
+              ? 'var(--color-amber)'
+              : 'var(--color-text-muted)',
+            boxShadow: isVotedV2 ? 'var(--shadow-glow-amber)' : 'none',
+            transition: 'all 0.3s ease',
+          }}
+        />
       </Flex>
-    </Flex>
+    </motion.div>
   );
 };

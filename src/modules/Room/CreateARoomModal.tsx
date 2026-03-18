@@ -27,14 +27,10 @@ export const CreateARoomModal = () => {
       <Text
         fontWeight={'bold'}
         fontSize={'md'}
-        md={{
-          fontSize: 'lg',
-        }}
-        lg={{
-          fontSize: 'xl',
-        }}
+        md={{ fontSize: 'lg' }}
+        lg={{ fontSize: 'xl' }}
         marginBlockStart={2}
-        color={'red'}
+        style={{ color: 'var(--color-cyan)' }}
       >
         Please set your username first
       </Text>
@@ -44,9 +40,10 @@ export const CreateARoomModal = () => {
   return (
     <>
       <Button
+        className="cta-primary"
         width={'fit-content'}
         marginBlockStart={4}
-        fontWeight={'semibold'}
+        fontWeight={'bold'}
         size={'xl'}
         onClick={() => {
           setOpenDialog(!openDialog);
@@ -63,7 +60,14 @@ export const CreateARoomModal = () => {
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content>
+            <Dialog.Content
+              style={{
+                background: 'var(--color-bg-surface)',
+                border: '1px solid var(--color-border)',
+                borderRadius: 'var(--radius-lg)',
+                boxShadow: 'var(--shadow-lg)',
+              }}
+            >
               <Dialog.Body>
                 <Stack
                   flex={1}
@@ -72,7 +76,15 @@ export const CreateARoomModal = () => {
                   marginBlock={4}
                 >
                   <Tabs.Root defaultValue="create" variant="plain">
-                    <Tabs.List bg="bg.muted" rounded="l3" p="1">
+                    <Tabs.List
+                      style={{
+                        background: 'var(--color-bg-elevated)',
+                        borderRadius: 'var(--radius-md)',
+                        padding: '4px',
+                      }}
+                      rounded="l3"
+                      p="1"
+                    >
                       <Tabs.Trigger
                         value="create"
                         paddingBlock={0}
@@ -105,7 +117,10 @@ export const CreateARoomModal = () => {
                 </Stack>
               </Dialog.Body>
               <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
+                <CloseButton
+                  size="sm"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                />
               </Dialog.CloseTrigger>
             </Dialog.Content>
           </Dialog.Positioner>
@@ -158,7 +173,7 @@ const CreateARoomSection: FC<RoomSectionProps> = ({ userData, router }) => {
   };
   return (
     <Stack gap={4}>
-      <Text fontSize={'md'}>
+      <Text fontSize={'md'} color={'var(--color-text-secondary)'}>
         Set-up in seconds. All we need is a display name.
       </Text>
       <Input
@@ -168,6 +183,7 @@ const CreateARoomSection: FC<RoomSectionProps> = ({ userData, router }) => {
         fontSize={'md'}
       />
       <Button
+        className="cta-primary"
         width={'fit-content'}
         disabled={!roomName}
         loading={creating || joining}
@@ -207,7 +223,7 @@ const JoinARoomSection: FC<RoomSectionProps> = ({ userData, router }) => {
   };
   return (
     <Stack gap={4}>
-      <Text fontSize={'md'}>
+      <Text fontSize={'md'} color={'var(--color-text-secondary)'}>
         Put your room ID here to join an existing room.
       </Text>
       <Input
@@ -217,6 +233,7 @@ const JoinARoomSection: FC<RoomSectionProps> = ({ userData, router }) => {
         fontSize={'md'}
       />
       <Button
+        className="cta-primary"
         width={'fit-content'}
         disabled={!roomId}
         loading={joining}

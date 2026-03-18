@@ -1,6 +1,7 @@
 import { SessionType } from '@/services';
+import { revealReadyVariants } from '@/styles/animations';
 import { Button } from '@chakra-ui/react';
-import classNames from 'classnames';
+import { motion } from 'framer-motion';
 import { FC } from 'react';
 import { useReveal, useUpsertRoom } from '../hooks';
 import { isVoted } from './helpers';
@@ -39,17 +40,22 @@ export const RevealButton: FC<RevealButtonProps> = ({ roomData }) => {
   };
 
   return (
-    <Button
-      disabled={!hasSomeVoted}
-      onClick={handleClick}
-      className={classNames('glow-button', {
-        'glow-button-action': hasSomeVoted || revealed,
-      })}
-      borderRadius={'md'}
-      size={'lg'}
-      fontWeight={'bold'}
+    <motion.div
+      variants={revealReadyVariants}
+      initial="idle"
+      animate={hasSomeVoted && !revealed ? 'ready' : 'idle'}
+      whileTap="tap"
     >
-      {revealed ? 'New Game' : 'Reveal Cards'}
-    </Button>
+      <Button
+        disabled={!hasSomeVoted}
+        onClick={handleClick}
+        className={revealed ? 'new-game-button' : 'reveal-button'}
+        borderRadius={'md'}
+        size={'lg'}
+        fontWeight={'bold'}
+      >
+        {revealed ? 'New Game' : 'Reveal Cards'}
+      </Button>
+    </motion.div>
   );
 };
