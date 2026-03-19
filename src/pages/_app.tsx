@@ -1,4 +1,4 @@
-import { AppChakraProvider, AppCursor } from '@/components';
+import { AppChakraProvider } from '@/components';
 import {
   HydrationBoundary,
   QueryClient,
@@ -16,7 +16,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={pageProps.dehydratedState}>
         <AppChakraProvider>
-          <AppCursor />
           <Component {...pageProps} />
         </AppChakraProvider>
       </HydrationBoundary>
