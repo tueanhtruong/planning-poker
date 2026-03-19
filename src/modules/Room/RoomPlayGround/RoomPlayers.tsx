@@ -82,7 +82,8 @@ export const RoomPlayers: FC<PropsWithChildren<RoomPlayersProps>> = ({
         direction={'column'}
         justifyContent={'center'}
         flexGrow={1}
-        paddingBlock={4}
+        paddingTop={12}
+        paddingBottom={8}
       >
         <Flex gap={6} wrap={'wrap'} justifyContent={'center'}>
           <AnimatePresence>
