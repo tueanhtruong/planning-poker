@@ -1,4 +1,9 @@
-import { getLatestSessions, SessionType, watchSession } from '@/services';
+import {
+  deleteSession,
+  getLatestSessions,
+  SessionType,
+  watchSession,
+} from '@/services';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
@@ -66,9 +71,24 @@ export const useGetLastedRooms = () => {
       return sessions;
     },
   });
+  const lastestRooms = data?.slice(0, 3) ?? [];
+  // Get the rest of rooms except the latest 3 rooms, and filter out the empty rooms
+  const restUnusedRooms = (data?.slice(3) ?? []).filter((room) => {
+    const isRoomEmpty =
+      !room.participants || Object.keys(room.participants).length === 0;
+    return isRoomEmpty;
+  });
+  // Delete the empty rooms in background
+  useEffect(() => {
+    if (!restUnusedRooms.length) return;
+    restUnusedRooms.forEach((room) => {
+      // Call the API to delete the room
+      deleteSession(room.id);
+    });
+  }, [restUnusedRooms]);
 
   return {
-    data,
+    data: lastestRooms,
     isFetching,
     error,
   };

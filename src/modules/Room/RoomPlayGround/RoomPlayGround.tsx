@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import { LuView } from 'react-icons/lu';
 import { useJoinRoom, useRoomInfo } from '../hooks';
+import { AverageSidebar } from './AverageSidebar';
 import { CardsGroup } from './CardsGroup';
 import { RevealButton } from './RevealButton';
 import { RoomPlayers } from './RoomPlayers';
@@ -164,6 +165,12 @@ export const InnerRoomPlayGround = ({
           />
         )}
       </Stack>
+
+      {/* Average / results sidebar */}
+      <AverageSidebar
+        participants={data.participants ?? {}}
+        revealed={!!data.revealed}
+      />
     </>
   );
 };

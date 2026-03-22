@@ -1566,3 +1566,179 @@ button[data-variant='outline']:focus-visible:not(:disabled) {
   flex-wrap: wrap;
   gap: 16px;
 }
+
+/* ================================================
+   AVERAGE SIDEBAR / RESULTS PANEL
+================================================ */
+.average-sidebar {
+  width: 252px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* Desktop: fixed to the right, below the navbar */
+.average-sidebar-desktop {
+  position: fixed;
+  top: 96px;
+  right: 16px;
+  z-index: 100;
+}
+
+/* Mobile: hide desktop sidebar */
+@media (max-width: 768px) {
+  .average-sidebar-desktop {
+    display: none;
+  }
+}
+
+/* Mobile: floating toggle button */
+.average-sidebar-toggle {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 300;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-indigo), var(--color-cyan));
+  border: none;
+  color: white;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-glow-indigo);
+  transition:
+    transform 0.2s var(--spring),
+    box-shadow 0.2s ease;
+}
+
+.average-sidebar-toggle:hover {
+  transform: scale(1.1);
+  box-shadow:
+    0 0 24px var(--color-indigo-glow),
+    0 0 48px rgba(99, 102, 241, 0.2);
+}
+
+@media (max-width: 768px) {
+  .average-sidebar-toggle {
+    display: flex;
+  }
+}
+
+/* Mobile drawer */
+.average-sidebar-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  z-index: 400;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  overflow-y: auto;
+}
+
+/* Backdrop behind the drawer */
+.average-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 399;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Inner content */
+.average-sidebar-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.average-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.average-sidebar-title {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.average-sidebar-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.average-sidebar-close:hover {
+  color: var(--color-text-primary);
+  background: rgba(240, 246, 252, 0.08);
+}
+
+/* On desktop the drawer never opens, so hide the close button */
+@media (min-width: 769px) {
+  .average-sidebar-close {
+    display: none;
+  }
+}
+
+/* Average value block */
+.average-sidebar-avg-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px;
+  background: rgba(99, 102, 241, 0.06);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.average-sidebar-avg-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.average-sidebar-avg-value {
+  font-size: 52px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1;
+}
+
+.average-sidebar-avg-sub {
+  font-size: 16px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+/* Waiting / not-yet-revealed state */
+.average-sidebar-waiting {
+  font-size: 16px;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 20px 0;
+  font-style: italic;
+}

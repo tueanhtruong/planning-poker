@@ -278,7 +278,7 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
                   style={{
                     borderColor: 'var(--color-border-hover)',
                     color: 'var(--color-text-secondary)',
-                    fontSize: '0.75rem',
+                    fontSize: '0.9rem',
                     height: '26px',
                   }}
                   onClick={() => handleJoinRoom(room.id)}
@@ -289,8 +289,8 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
                   size={'xs'}
                   variant={'ghost'}
                   style={{
-                    color: 'var(--color-text-muted)',
-                    fontSize: '0.75rem',
+                    color: 'var(--color-text-secondary)',
+                    fontSize: '0.9rem',
                     height: '26px',
                   }}
                   onClick={() => handleJoinRoom(room.id, true)}

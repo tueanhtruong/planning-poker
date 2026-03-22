@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  get,
-  limitToLast,
-  off,
-  onValue,
-  query,
-  ref,
-  remove,
-  set,
-} from 'firebase/database';
+import { get, off, onValue, query, ref, remove, set } from 'firebase/database';
 import { database } from '../database';
 
 export type ParticipantType = {
@@ -65,12 +56,16 @@ export const checkSessionExists = async (sessionId: string) => {
 
 export const getLatestSessions = async () => {
   const sessionsRef = ref(database, `sessions`);
-  const q = query(sessionsRef, limitToLast(3));
+  const q = query(sessionsRef);
   const snapshot = await get(q);
   if (snapshot.exists()) {
     return Object.values(snapshot.val()).reverse() as SessionType[];
   }
   return [];
+};
+
+export const deleteSession = async (sessionId: string) => {
+  await remove(ref(database, `sessions/${sessionId}`));
 };
 
 export const upsertParticipant = async (
