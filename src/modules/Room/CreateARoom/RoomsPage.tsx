@@ -1,17 +1,29 @@
-import { CommonContainer } from '@/components';
 import { UserProfile, useUser } from '@/modules/User';
 import { Stack } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { CreateARoomSection, JoinARoomSection } from './Sections';
 
+const containerVariants = {
+  initial: {},
+  animate: { transition: { staggerChildren: 0.14, delayChildren: 0.05 } },
+};
+
+const cardVariants: Variants = {
+  initial: { opacity: 0, y: 28, scale: 0.97 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.52, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 export const RoomsPage = () => {
   const { data: userData } = useUser();
-
   const router = useRouter();
-  const isHaveUserName = !!userData;
 
-  if (!isHaveUserName) {
+  if (!userData) {
     return (
       <Stack flexGrow={1} justifyContent={'center'} alignItems={'center'}>
         <UserProfile customDisplayText={'Please set your username first'} />
@@ -20,58 +32,42 @@ export const RoomsPage = () => {
   }
 
   return (
-    <Stack flexGrow={1} gap={0}>
-      {/* Create a Room */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        style={{ display: 'flex', flexGrow: 1 }}
-      >
-        <CommonContainer>
-          <Stack
-            direction={'column'}
-            minHeight={'100%'}
-            justifyContent={'center'}
-            alignItems={'center'}
-            flexGrow={1}
-            gapY={6}
-            width={'full'}
-            maxW={'100%'}
-            md={{ maxW: '80%' }}
-          >
-            <CreateARoomSection router={router} userData={userData} />
-          </Stack>
-        </CommonContainer>
-      </motion.div>
+    <div className="rooms-page-root">
+      {/* Ambient blobs */}
+      <div className="rooms-bg-blob rooms-bg-blob--indigo" />
+      <div className="rooms-bg-blob rooms-bg-blob--cyan" />
 
-      {/* Join a Room */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
-        style={{ display: 'flex', flexGrow: 1 }}
+        className="rooms-cards-grid"
+        variants={containerVariants}
+        initial="initial"
+        animate="animate"
       >
-        <Stack
-          className="section-surface"
-          gapY={6}
-          alignItems={'center'}
-          justifyContent={'center'}
-          flexGrow={1}
-          borderTop={'1px solid var(--color-border)'}
+        {/* Create a Room card */}
+        <motion.div
+          variants={cardVariants}
+          className="rooms-section-card rooms-section-card--create"
         >
-          <CommonContainer>
-            <Stack
-              width={'full'}
-              maxW={'100%'}
-              md={{ maxW: '80%' }}
-              marginInlineStart={'auto'}
-            >
-              <JoinARoomSection router={router} userData={userData} />
-            </Stack>
-          </CommonContainer>
-        </Stack>
+          <div className="rooms-card-accent-bar rooms-card-accent-bar--indigo" />
+          <div className="rooms-card-icon">✦</div>
+          <CreateARoomSection router={router} userData={userData} />
+        </motion.div>
+
+        {/* Divider */}
+        <div className="rooms-divider">
+          <span className="rooms-divider-or">or</span>
+        </div>
+
+        {/* Join a Room card */}
+        <motion.div
+          variants={cardVariants}
+          className="rooms-section-card rooms-section-card--join"
+        >
+          <div className="rooms-card-accent-bar rooms-card-accent-bar--cyan" />
+          <div className="rooms-card-icon">⬡</div>
+          <JoinARoomSection router={router} userData={userData} />
+        </motion.div>
       </motion.div>
-    </Stack>
+    </div>
   );
 };
