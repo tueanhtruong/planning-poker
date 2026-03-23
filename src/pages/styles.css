@@ -90,6 +90,69 @@
 }
 
 /* ================================================
+   LIGHT THEME OVERRIDES
+================================================ */
+[data-theme='light'] {
+  /* -- Core Backgrounds -- */
+  --color-bg-base: #f6f8fa;
+  --color-bg-surface: #ffffff;
+  --color-bg-overlay: #eaeef2;
+  --color-bg-elevated: #f0f3f6;
+
+  /* -- Typography -- */
+  --color-text-primary: #1c2128;
+  --color-text-secondary: #57606a;
+  --color-text-muted: #8c959f;
+
+  /* -- Borders -- */
+  --color-border: rgba(27, 31, 36, 0.12);
+  --color-border-hover: rgba(27, 31, 36, 0.22);
+
+  /* -- Shadow levels -- */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.14);
+
+  /* -- Glassmorphism -- */
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(27, 31, 36, 0.1);
+
+  /* -- Legacy aliases -- */
+  --contentCardBg: #ffffff;
+  --bgColor: #f6f8fa;
+}
+
+[data-theme='light'] .hero-preview-card {
+  background: linear-gradient(
+    140deg,
+    rgba(230, 236, 245, 0.95),
+    rgba(246, 248, 250, 0.95)
+  );
+  border-color: rgba(99, 102, 241, 0.28);
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(99, 102, 241, 0.1);
+  color: var(--color-indigo);
+}
+
+[data-theme='light'] .poker-table-center {
+  background:
+    radial-gradient(
+      ellipse 70% 65% at 50% 50%,
+      rgba(99, 102, 241, 0.06) 0%,
+      rgba(34, 211, 238, 0.03) 45%,
+      transparent 72%
+    ),
+    rgba(255, 255, 255, 0.7);
+  border-color: rgba(27, 31, 36, 0.12);
+}
+
+[data-theme='light'] .reveal-button {
+  background: linear-gradient(135deg, var(--color-indigo), #0ea5e9) !important;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.32) !important;
+}
+
+/* ================================================
    RESETS
 ================================================ */
 *,
@@ -1741,4 +1804,71 @@ button[data-variant='outline']:focus-visible:not(:disabled) {
   text-align: center;
   padding: 20px 0;
   font-style: italic;
+}
+
+/* ================================================
+   THEME TOGGLE FLOATING BUTTON
+================================================ */
+body {
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.theme-toggle-btn {
+  position: fixed;
+  bottom: 24px;
+  left: 20px;
+  z-index: 9999;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border-hover);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    background var(--transition-base),
+    border-color var(--transition-base);
+  outline: none;
+  padding: 0;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.12);
+  box-shadow: var(--shadow-glow-indigo);
+  border-color: var(--color-indigo);
+  background: var(--color-bg-overlay);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.9);
+}
+
+.theme-toggle-btn:focus-visible {
+  outline: 2px solid var(--color-indigo);
+  outline-offset: 3px;
+}
+
+.theme-toggle-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    opacity 0.2s ease,
+    transform 0.3s var(--spring);
+  opacity: 0;
+  transform: scale(0.5) rotate(-30deg);
+}
+
+.theme-toggle-icon.visible {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
 }

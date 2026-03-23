@@ -80,11 +80,11 @@ const InnerCardsGroup = ({
       <motion.div
         style={{
           display: 'flex',
-          gap: '10px',
+          gap: '20px',
           alignItems: 'center',
           justifyContent: 'center',
           flexWrap: 'wrap',
-          padding: '16px 12px',
+          padding: '16px 24px',
           background: 'var(--color-bg-surface)',
           border: '1px solid var(--color-border)',
           borderRadius: 'var(--radius-lg)',

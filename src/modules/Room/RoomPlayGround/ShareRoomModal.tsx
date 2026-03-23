@@ -70,7 +70,7 @@ export const ShareRoomModal = ({ roomId }: ShareRoomModalProps) => {
                       background: 'white',
                       padding: '12px',
                       borderRadius: 'var(--radius-md)',
-                      color: 'var(--color-indigo)',
+                      color: 'black',
                     }}
                   >
                     <QrCode.Pattern />

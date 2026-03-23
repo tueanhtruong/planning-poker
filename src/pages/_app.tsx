@@ -1,4 +1,4 @@
-import { AppChakraProvider } from '@/components';
+import { AppChakraProvider, ThemeToggle } from '@/components';
 import {
   HydrationBoundary,
   QueryClient,
@@ -17,6 +17,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <HydrationBoundary state={pageProps.dehydratedState}>
         <AppChakraProvider>
           <Component {...pageProps} />
+          <ThemeToggle />
         </AppChakraProvider>
       </HydrationBoundary>
       <ReactQueryDevtools />
