@@ -109,7 +109,7 @@ export const RoomPlayers: FC<PropsWithChildren<RoomPlayersProps>> = ({
                     participant={participant}
                     revealed={revealed}
                     onSendEmoji={handleSendEmoji}
-                    canSendEmoji={canSendEmoji || !participant.preview}
+                    canSendEmoji={canSendEmoji && !participant.preview}
                     cardRef={isMe ? myCardRef : undefined}
                   />
                 );
@@ -131,7 +131,7 @@ export const RoomPlayers: FC<PropsWithChildren<RoomPlayersProps>> = ({
                     participant={participant}
                     revealed={revealed}
                     onSendEmoji={handleSendEmoji}
-                    canSendEmoji={canSendEmoji || !participant.preview}
+                    canSendEmoji={canSendEmoji && !participant.preview}
                     cardRef={isMe ? myCardRef : undefined}
                   />
                 );

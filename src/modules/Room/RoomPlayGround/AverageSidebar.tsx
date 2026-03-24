@@ -60,11 +60,11 @@ export const AverageSidebar: FC<AverageSidebarProps> = ({
     };
   }, [participants, configData?.cards]);
 
-  const previewParticipantIds = useMemo(() => {
-    return Object.entries(participants)
-      .filter(([_, participant]) => participant?.preview)
-      .map(([participantId]) => participantId);
-  }, [participants]);
+  const previewParticipants = Object.entries(participants)
+    .filter(([_, participant]) => {
+      return participant?.preview;
+    })
+    .map(([_, participant]) => participant);
 
   const SidebarContent = (
     <div className="average-sidebar-content">
@@ -94,41 +94,44 @@ export const AverageSidebar: FC<AverageSidebarProps> = ({
               their mean, and then finding the closest card value from the
               configuration.`}
                 interactive
-                positioning={{ placement: 'top' }}
+                positioning={{ placement: 'left-start' }}
                 contentProps={{ className: 'tooltip-content' }}
               >
                 <Icon
                   style={{
-                    color: 'var(--color-amber)',
+                    color: 'var(--color-text-secondary)',
                     cursor: 'pointer',
                     display: 'inline',
                     marginInline: 4,
+                    marginTop: -2,
                   }}
-                  fontSize={16}
+                  fontSize={14}
                 >
                   <LuMessageCircleWarning />
                 </Icon>
               </Tooltip>
             </span>
-            {previewParticipantIds.length > 0 ? (
-              <div className="average-sidebar-preview-users">
-                <span className="average-sidebar-preview-label">
-                  Preview viewers:
-                </span>{' '}
-                {previewParticipantIds.map((participantId, index) => (
-                  <PreviewParticipantName
-                    key={participantId}
-                    userId={participantId}
-                    withTrailingComma={index < previewParticipantIds.length - 1}
-                  />
-                ))}
-              </div>
-            ) : null}
           </div>
         </>
       ) : (
         <div className="average-sidebar-waiting">Waiting for reveal…</div>
       )}
+      {previewParticipants.length > 0 ? (
+        <div className="average-sidebar-preview-users">
+          <span className="average-sidebar-preview-label">
+            Preview viewers:
+          </span>{' '}
+          {previewParticipants.map((participant, index) => {
+            return (
+              <PreviewParticipantName
+                key={`preview-participant-${participant.id}`}
+                userId={participant.id}
+                withTrailingComma={index < previewParticipants.length - 1}
+              />
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 

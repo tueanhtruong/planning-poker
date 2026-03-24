@@ -56,7 +56,7 @@ export const Section1 = () => {
           >
             <Text className="hero-badge">
               <span className="hero-badge-dot" />
-              Now in Beta
+              Ready to level up your sprint planning?
             </Text>
           </motion.div>
 
