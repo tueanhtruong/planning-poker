@@ -1,4 +1,5 @@
 import { Spinner, Text } from '@chakra-ui/react';
+import { useRef } from 'react';
 
 import { useConfig } from '@/modules/Config';
 import { SessionType } from '@/services';
@@ -22,6 +23,7 @@ const InnerCardsGroup = ({
 }: CardsGroupProps) => {
   const { data, isFetching } = useConfig();
   const { upsert: voteV2 } = useVoteV2();
+  const cardButtonRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const myRecord = participants[userId];
   if (isFetching)
     return (
@@ -52,6 +54,27 @@ const InnerCardsGroup = ({
   };
 
   const lastVote = getLastVote(myRecord?.votes);
+
+  const handleCardKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
+    const isNextKey = event.key === 'ArrowRight' || event.key === 'ArrowDown';
+    const isPreviousKey = event.key === 'ArrowLeft' || event.key === 'ArrowUp';
+
+    if (!isNextKey && !isPreviousKey) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const nextIndex = isNextKey ? index + 1 : index - 1;
+    const nextButton = cardButtonRefs.current[nextIndex];
+
+    if (nextButton) {
+      nextButton.focus();
+    }
+  };
 
   return (
     <motion.div
@@ -94,15 +117,19 @@ const InnerCardsGroup = ({
         animate="animate"
       >
         <AnimatePresence>
-          {data.cards.map((card) => {
+          {data.cards.map((card, index) => {
             const isSelected = lastVote === card;
             return (
               <motion.button
                 key={`poker-card-${card}`}
+                ref={(element) => {
+                  cardButtonRefs.current[index] = element;
+                }}
                 variants={staggerChild}
-                whileHover={{ y: -8, scale: 1.05 }}
-                whileTap={{ y: -2, scale: 0.97 }}
+                whileHover={{ y: -2, scale: 1.02 }}
+                whileTap={{ y: -1, scale: 0.98 }}
                 onClick={() => handleCardSelect(card)}
+                onKeyDown={(event) => handleCardKeyDown(event, index)}
                 className={`voting-card${isSelected ? ' voting-card-selected' : ''}`}
               >
                 <span

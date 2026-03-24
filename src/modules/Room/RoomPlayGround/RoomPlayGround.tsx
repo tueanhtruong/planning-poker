@@ -93,6 +93,16 @@ export const InnerRoomPlayGround = ({
       </Stack>
     );
   }
+
+  const participants = data.participants ?? {};
+  const roomPlayersParticipants = preview
+    ? Object.fromEntries(
+        Object.entries(participants).filter(([participantId]) => {
+          return participantId !== userId;
+        }),
+      )
+    : participants;
+
   const title = `${preview ? 'Preview - ' : 'Room - '}${data.name}`;
   return (
     <>
@@ -145,10 +155,11 @@ export const InnerRoomPlayGround = ({
         {/* Poker table + players */}
         <RoomPlayers
           myId={userId}
-          participants={data.participants ?? {}}
+          participants={roomPlayersParticipants}
           revealed={data.revealed}
           roomId={id}
           flyingEmojis={data.flyingEmojis ?? {}}
+          canSendEmoji={!preview}
         >
           <Stack className="poker-table-center" padding={4}>
             <RevealButton roomData={data} />
@@ -161,16 +172,13 @@ export const InnerRoomPlayGround = ({
             userId={userId}
             roomId={id}
             revealed={data.revealed}
-            participants={data.participants ?? {}}
+            participants={participants}
           />
         )}
       </Stack>
 
       {/* Average / results sidebar */}
-      <AverageSidebar
-        participants={data.participants ?? {}}
-        revealed={!!data.revealed}
-      />
+      <AverageSidebar participants={participants} revealed={!!data.revealed} />
     </>
   );
 };

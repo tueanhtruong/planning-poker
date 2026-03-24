@@ -46,7 +46,11 @@ export const ThemeToggle = () => {
 
   useEffect(() => {
     const stored = localStorage.getItem('pp-theme') as 'dark' | 'light' | null;
-    const initial = stored ?? 'dark';
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+      .matches
+      ? 'dark'
+      : 'light';
+    const initial = stored ?? systemTheme;
     setTheme(initial);
     document.documentElement.setAttribute('data-theme', initial);
     setMounted(true);

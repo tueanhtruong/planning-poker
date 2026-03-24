@@ -1,7 +1,10 @@
+import { Tooltip } from '@/components/ui/tooltip';
+import { useConfig } from '@/modules/Config';
 import { SessionType } from '@/services';
+import { Icon } from '@chakra-ui/react/icon';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FC, useMemo, useState } from 'react';
-import { LuChartColumn, LuX } from 'react-icons/lu';
+import { LuChartColumn, LuMessageCircleWarning, LuX } from 'react-icons/lu';
 import { getLastVote } from './helpers';
 
 type AverageSidebarProps = {
@@ -14,6 +17,7 @@ export const AverageSidebar: FC<AverageSidebarProps> = ({
   revealed,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: configData } = useConfig();
 
   const { average, totalVoters, numericVoters } = useMemo(() => {
     const participantsData = Object.values(participants).filter(Boolean);
@@ -30,17 +34,30 @@ export const AverageSidebar: FC<AverageSidebarProps> = ({
       )
       .map((v) => parseFloat(v));
 
-    const average =
+    const numericConfigCards = (configData?.cards ?? [])
+      .map((card) => Number(card))
+      .filter((value) => isFinite(value));
+
+    const rawAverage =
       numericVotes.length > 0
         ? numericVotes.reduce((a, b) => a + b, 0) / numericVotes.length
         : null;
+
+    const average =
+      rawAverage !== null && numericConfigCards.length > 0
+        ? numericConfigCards.reduceRight((closest, cardValue) => {
+            const closestDistance = Math.abs(closest - rawAverage);
+            const currentDistance = Math.abs(cardValue - rawAverage);
+            return currentDistance < closestDistance ? cardValue : closest;
+          }, numericConfigCards[0])
+        : rawAverage;
 
     return {
       average,
       totalVoters,
       numericVoters: numericVotes.length,
     };
-  }, [participants]);
+  }, [participants, configData?.cards]);
 
   const SidebarContent = (
     <div className="average-sidebar-content">
@@ -60,13 +77,31 @@ export const AverageSidebar: FC<AverageSidebarProps> = ({
           <div className="average-sidebar-avg-block">
             <span className="average-sidebar-avg-label">Average</span>
             <span className="average-sidebar-avg-value gradient-text">
-              {average !== null
-                ? parseFloat(average.toFixed(1)).toString()
-                : '—'}
+              {average !== null ? average.toString() : '—'}
             </span>
             <span className="average-sidebar-avg-sub">
               {numericVoters} numeric vote{numericVoters !== 1 ? 's' : ''} ·{' '}
               {totalVoters} total
+              <Tooltip
+                content={`The average is calculated by taking the numeric votes, computing
+              their mean, and then finding the closest card value from the
+              configuration.`}
+                interactive
+                positioning={{ placement: 'top' }}
+                contentProps={{ className: 'tooltip-content' }}
+              >
+                <Icon
+                  style={{
+                    color: 'var(--color-amber)',
+                    cursor: 'pointer',
+                    display: 'inline',
+                    marginInline: 4,
+                  }}
+                  fontSize={16}
+                >
+                  <LuMessageCircleWarning />
+                </Icon>
+              </Tooltip>
             </span>
           </div>
         </>

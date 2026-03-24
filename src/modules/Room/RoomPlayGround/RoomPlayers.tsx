@@ -23,6 +23,7 @@ type RoomPlayersProps = {
   revealed?: boolean;
   flyingEmojis?: Record<string, FlyingEmojiType>;
   roomId: string;
+  canSendEmoji?: boolean;
 };
 
 export const RoomPlayers: FC<PropsWithChildren<RoomPlayersProps>> = ({
@@ -32,6 +33,7 @@ export const RoomPlayers: FC<PropsWithChildren<RoomPlayersProps>> = ({
   children,
   flyingEmojis = {},
   roomId,
+  canSendEmoji = true,
 }) => {
   const participantsData = Object.values(participants).filter(Boolean);
   const isRoomHasOneParticipant = participantsData.length === 1;
@@ -42,33 +44,40 @@ export const RoomPlayers: FC<PropsWithChildren<RoomPlayersProps>> = ({
   const myCardRef = useRef<HTMLDivElement>(null);
   const lastEmojiSentTime = useRef<number>(0);
 
-  const handleSendEmoji = useCallback((emoji: string, targetUserId: string) => {
-    const now = Date.now();
-    const timeSinceLastEmoji = now - lastEmojiSentTime.current;
+  const handleSendEmoji = useCallback(
+    (emoji: string, targetUserId: string) => {
+      if (!canSendEmoji) {
+        return;
+      }
 
-    // Debounce: only allow one emoji per second (1000ms)
-    if (timeSinceLastEmoji < 1000) {
-      return;
-    }
+      const now = Date.now();
+      const timeSinceLastEmoji = now - lastEmojiSentTime.current;
 
-    const myCardElement = myCardRef.current;
-    const targetCardElement = document.getElementById(
-      `player-card-${targetUserId}`,
-    );
+      // Debounce: only allow one emoji per second (1000ms)
+      if (timeSinceLastEmoji < 1000) {
+        return;
+      }
 
-    if (!myCardElement || !targetCardElement) return;
+      const myCardElement = myCardRef.current;
+      const targetCardElement = document.getElementById(
+        `player-card-${targetUserId}`,
+      );
 
-    const newFlyingEmoji: FlyingEmojiType = {
-      id: `${Date.now()}${Math.random()}`.replaceAll('.', ''),
-      emoji,
-      fromUserId: myId,
-      toUserId: targetUserId,
-    };
+      if (!myCardElement || !targetCardElement) return;
 
-    sendEmoji({ roomId, payload: newFlyingEmoji });
+      const newFlyingEmoji: FlyingEmojiType = {
+        id: `${Date.now()}${Math.random()}`.replaceAll('.', ''),
+        emoji,
+        fromUserId: myId,
+        toUserId: targetUserId,
+      };
 
-    lastEmojiSentTime.current = now;
-  }, []);
+      sendEmoji({ roomId, payload: newFlyingEmoji });
+
+      lastEmojiSentTime.current = now;
+    },
+    [canSendEmoji, myId, roomId, sendEmoji],
+  );
 
   const handleEmojiComplete = useCallback((id: string) => {
     removeEmoji({ roomId, emojiId: id });
@@ -100,6 +109,7 @@ export const RoomPlayers: FC<PropsWithChildren<RoomPlayersProps>> = ({
                     participant={participant}
                     revealed={revealed}
                     onSendEmoji={handleSendEmoji}
+                    canSendEmoji={canSendEmoji}
                     cardRef={isMe ? myCardRef : undefined}
                   />
                 );
@@ -121,6 +131,7 @@ export const RoomPlayers: FC<PropsWithChildren<RoomPlayersProps>> = ({
                     participant={participant}
                     revealed={revealed}
                     onSendEmoji={handleSendEmoji}
+                    canSendEmoji={canSendEmoji}
                     cardRef={isMe ? myCardRef : undefined}
                   />
                 );
@@ -147,8 +158,17 @@ const Player: FC<{
   participant: ParticipantType;
   revealed?: boolean;
   onSendEmoji: (emoji: string, targetUserId: string) => void;
+  canSendEmoji?: boolean;
   cardRef?: React.RefObject<HTMLDivElement>;
-}> = ({ userId, participant, isMe, revealed, onSendEmoji, cardRef }) => {
+}> = ({
+  userId,
+  participant,
+  isMe,
+  revealed,
+  onSendEmoji,
+  canSendEmoji = true,
+  cardRef,
+}) => {
   const { data: userData } = useUser({ id: userId });
   const isVotedV2 = isVoted(participant.votes);
   const lastVote = getLastVote(participant.votes);
@@ -213,7 +233,7 @@ const Player: FC<{
             >
               • you
             </Text>
-          ) : (
+          ) : canSendEmoji ? (
             <Tooltip
               content={<EmojiPicker onEmojiClick={handleEmojiClick} />}
               interactive
@@ -229,7 +249,7 @@ const Player: FC<{
                 <LuMessageSquareShare />
               </Icon>
             </Tooltip>
-          )}
+          ) : null}
           {allPreviousVote && revealed && (
             <Tooltip
               content={'Previous votes: ' + allPreviousVote}
