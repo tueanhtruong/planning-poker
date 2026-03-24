@@ -1,7 +1,7 @@
 import { upsertParticipant } from '@/services';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 
-type JoinRoomPayload = { roomId: string; userId: string };
+type JoinRoomPayload = { roomId: string; userId: string; preview?: boolean };
 
 export const useJoinRoom = (
   options?: UseMutationOptions<void, Error, JoinRoomPayload>,
@@ -11,11 +11,12 @@ export const useJoinRoom = (
     Error,
     JoinRoomPayload
   >({
-    mutationFn: async ({ roomId, userId }) => {
+    mutationFn: async ({ roomId, userId, preview }) => {
       return upsertParticipant(roomId, {
         id: userId,
         vote: '',
         votes: [],
+        preview: preview ?? false,
       });
     },
     ...options,

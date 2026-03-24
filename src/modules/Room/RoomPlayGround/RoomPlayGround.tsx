@@ -76,7 +76,7 @@ export const InnerRoomPlayGround = ({
     const isUserInRoom = Boolean(data.participants?.[userId]);
     // Check if the user is already in the room
     if (!isUserInRoom && !calledJoinRoomRef.current) {
-      joinRoom({ roomId: id, userId: userId });
+      joinRoom({ roomId: id, userId: userId, preview });
       calledJoinRoomRef.current = true;
       return;
     }
@@ -95,13 +95,11 @@ export const InnerRoomPlayGround = ({
   }
 
   const participants = data.participants ?? {};
-  const roomPlayersParticipants = preview
-    ? Object.fromEntries(
-        Object.entries(participants).filter(([participantId]) => {
-          return participantId !== userId;
-        }),
-      )
-    : participants;
+  const roomPlayersParticipants = Object.fromEntries(
+    Object.entries(participants).filter(([_, participant]) => {
+      return !participant.preview;
+    }),
+  );
 
   const title = `${preview ? 'Preview - ' : 'Room - '}${data.name}`;
   return (

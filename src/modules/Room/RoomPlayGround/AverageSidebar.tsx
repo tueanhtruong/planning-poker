@@ -1,5 +1,6 @@
 import { Tooltip } from '@/components/ui/tooltip';
 import { useConfig } from '@/modules/Config';
+import { useUser } from '@/modules/User';
 import { SessionType } from '@/services';
 import { Icon } from '@chakra-ui/react/icon';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -59,6 +60,12 @@ export const AverageSidebar: FC<AverageSidebarProps> = ({
     };
   }, [participants, configData?.cards]);
 
+  const previewParticipantIds = useMemo(() => {
+    return Object.entries(participants)
+      .filter(([_, participant]) => participant?.preview)
+      .map(([participantId]) => participantId);
+  }, [participants]);
+
   const SidebarContent = (
     <div className="average-sidebar-content">
       <div className="average-sidebar-header">
@@ -103,6 +110,20 @@ export const AverageSidebar: FC<AverageSidebarProps> = ({
                 </Icon>
               </Tooltip>
             </span>
+            {previewParticipantIds.length > 0 ? (
+              <div className="average-sidebar-preview-users">
+                <span className="average-sidebar-preview-label">
+                  Preview viewers:
+                </span>{' '}
+                {previewParticipantIds.map((participantId, index) => (
+                  <PreviewParticipantName
+                    key={participantId}
+                    userId={participantId}
+                    withTrailingComma={index < previewParticipantIds.length - 1}
+                  />
+                ))}
+              </div>
+            ) : null}
           </div>
         </>
       ) : (
@@ -152,5 +173,20 @@ export const AverageSidebar: FC<AverageSidebarProps> = ({
         )}
       </AnimatePresence>
     </>
+  );
+};
+
+const PreviewParticipantName: FC<{
+  userId: string;
+  withTrailingComma: boolean;
+}> = ({ userId, withTrailingComma }) => {
+  const { data } = useUser({ id: userId });
+  const displayName = data?.displayName ?? 'Unknown';
+
+  return (
+    <span className="average-sidebar-preview-user-name">
+      {displayName}
+      {withTrailingComma ? ', ' : ''}
+    </span>
   );
 };

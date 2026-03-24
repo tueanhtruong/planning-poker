@@ -7,6 +7,7 @@ export type ParticipantType = {
   vote: string;
   id: string;
   votes: string[];
+  preview?: boolean;
 };
 
 export type SessionType = {
