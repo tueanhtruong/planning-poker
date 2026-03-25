@@ -11,12 +11,12 @@ export const useJoinRoom = (
     Error,
     JoinRoomPayload
   >({
-    mutationFn: async ({ roomId, userId, preview }) => {
+    mutationFn: async ({ roomId, userId, preview = false }) => {
       return upsertParticipant(roomId, {
         id: userId,
         vote: '',
         votes: [],
-        preview: preview ?? false,
+        preview,
       });
     },
     ...options,

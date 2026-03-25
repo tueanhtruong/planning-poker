@@ -74,8 +74,9 @@ export const InnerRoomPlayGround = ({
       return;
     }
     const isUserInRoom = Boolean(data.participants?.[userId]);
-    // Check if the user is already in the room
-    if (!isUserInRoom && !calledJoinRoomRef.current) {
+    // Check if the user is already in the room or if the joinRoom function has been called before
+    // => if not, call the joinRoom function to add the user to the room
+    if (!isUserInRoom || !calledJoinRoomRef.current) {
       joinRoom({ roomId: id, userId: userId, preview });
       calledJoinRoomRef.current = true;
       return;
