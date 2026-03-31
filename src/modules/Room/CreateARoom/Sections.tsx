@@ -150,7 +150,7 @@ export const JoinARoomSection: FC<RoomSectionProps> = ({
             {
               onSuccess() {
                 router.push(
-                  `/${preview ? PATHS.PREVIEW : PATHS.ROOMS}/${joiningRoomId}`,
+                  `/${PATHS.ROOMS}/${joiningRoomId}${preview ? '?preview=true' : ''}`,
                 );
               },
             },

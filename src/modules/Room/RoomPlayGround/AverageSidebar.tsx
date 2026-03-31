@@ -11,11 +11,13 @@ import { getLastVote } from './helpers';
 type AverageSidebarProps = {
   participants: SessionType['participants'];
   revealed: boolean;
+  children?: React.ReactNode;
 };
 
 export const AverageSidebar: FC<AverageSidebarProps> = ({
   participants,
   revealed,
+  children,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { data: configData } = useConfig();
@@ -139,6 +141,7 @@ export const AverageSidebar: FC<AverageSidebarProps> = ({
     <>
       {/* Desktop: always-visible fixed sidebar */}
       <div className="average-sidebar average-sidebar-desktop">
+        {children}
         {SidebarContent}
       </div>
 
@@ -170,6 +173,7 @@ export const AverageSidebar: FC<AverageSidebarProps> = ({
               exit={{ x: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             >
+              {children}
               {SidebarContent}
             </motion.div>
           </>

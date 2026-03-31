@@ -2,13 +2,14 @@
 
 import { UserProfile } from '@/modules/User';
 import { UserType } from '@/services';
-import { Button, Spinner, Stack, Text } from '@chakra-ui/react';
+import { Spinner, Stack, Switch, Text } from '@chakra-ui/react';
 import Head from 'next/head';
-import { useEffect, useRef, useState } from 'react';
-import { LuView } from 'react-icons/lu';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useJoinRoom, useRoomInfo } from '../hooks';
 import { AverageSidebar } from './AverageSidebar';
 import { CardsGroup } from './CardsGroup';
+import { PreviewOverlay } from './PreviewOverlay';
 import { RevealButton } from './RevealButton';
 import { RoomPlayers } from './RoomPlayers';
 import { ShareRoomModal } from './ShareRoomModal';
@@ -59,15 +60,25 @@ export const InnerRoomPlayGround = ({
 }: RoomPlayGroundProps & { userId: string }) => {
   const { data } = useRoomInfo({ id });
   const { upsert: joinRoom } = useJoinRoom();
+  const router = useRouter();
+  const isPreview = router.query.preview === 'true';
 
   // This is used to prevent calling the joinRoom when user leaving room
   const calledJoinRoomRef = useRef(false);
 
-  const handlePreviewRoom = () => {
-    const baseAppUrl = window.location.origin;
-    const previewUrl = `${baseAppUrl}/preview/${id}`;
-    window.open(previewUrl, '_blank');
-  };
+  const handleTogglePreview = useCallback(() => {
+    const nextPreview = !isPreview;
+    const query = { ...router.query };
+    if (nextPreview) {
+      query.preview = 'true';
+    } else {
+      delete query.preview;
+    }
+    router.replace({ pathname: router.pathname, query }, undefined, {
+      shallow: true,
+    });
+    joinRoom({ roomId: id, userId, preview: nextPreview });
+  }, [isPreview, joinRoom, id, userId, router]);
 
   useEffect(() => {
     if (!data) {
@@ -77,7 +88,7 @@ export const InnerRoomPlayGround = ({
     // Check if the user is already in the room or if the joinRoom function has been called before
     // => if not, call the joinRoom function to add the user to the room
     if (!isUserInRoom || !calledJoinRoomRef.current) {
-      joinRoom({ roomId: id, userId: userId, preview });
+      joinRoom({ roomId: id, userId: userId, preview: isPreview });
       calledJoinRoomRef.current = true;
       return;
     }
@@ -102,13 +113,14 @@ export const InnerRoomPlayGround = ({
     }),
   );
 
-  const title = `${preview ? 'Preview - ' : 'Room - '}${data.name}`;
+  const title = `${isPreview ? 'Preview - ' : 'Room - '}${data.name}`;
   return (
     <>
       <Head>
         <title>{title}</title>
         <meta property="og:title" content={title} key="title" />
       </Head>
+      <PreviewOverlay preview={isPreview} />
       <Stack alignItems={'center'} flex={1} paddingBlockStart={14}>
         {/* Room name header bar */}
         <Stack
@@ -117,7 +129,7 @@ export const InnerRoomPlayGround = ({
           gap={4}
           height={50}
           position={'fixed'}
-          top={15}
+          top={'12px'}
           zIndex={200}
           left={'calc(max(50% - 512px, 0px) + 82px)'}
           maxWidth={'calc(min(100%, 1024px) - 168px)'}
@@ -136,19 +148,6 @@ export const InnerRoomPlayGround = ({
             {data.name}
           </Text>
           <ShareRoomModal roomId={id} />
-          <Button
-            size={'xs'}
-            variant={'outline'}
-            data-variant="outline"
-            onClick={handlePreviewRoom}
-            style={{
-              borderColor: 'var(--color-border-hover)',
-              color: 'var(--color-text-secondary)',
-            }}
-          >
-            <LuView />
-            Preview
-          </Button>
         </Stack>
 
         {/* Poker table + players */}
@@ -158,7 +157,7 @@ export const InnerRoomPlayGround = ({
           revealed={data.revealed}
           roomId={id}
           flyingEmojis={data.flyingEmojis ?? {}}
-          canSendEmoji={!preview}
+          canSendEmoji={!isPreview}
         >
           <Stack className="poker-table-center" padding={4}>
             <RevealButton roomData={data} />
@@ -166,7 +165,7 @@ export const InnerRoomPlayGround = ({
         </RoomPlayers>
 
         {/* Voting card tray */}
-        {preview ? null : (
+        {isPreview ? null : (
           <CardsGroup
             userId={userId}
             roomId={id}
@@ -177,7 +176,28 @@ export const InnerRoomPlayGround = ({
       </Stack>
 
       {/* Average / results sidebar */}
-      <AverageSidebar participants={participants} revealed={!!data.revealed} />
+      <AverageSidebar participants={participants} revealed={!!data.revealed}>
+        <Switch.Root
+          size={'lg'}
+          checked={isPreview}
+          onCheckedChange={handleTogglePreview}
+          colorPalette={'blue'}
+          marginBlockStart={4}
+          marginInlineStart={4}
+        >
+          <Switch.HiddenInput />
+          <Switch.Control />
+          <Switch.Label
+            style={{
+              fontSize: '16px',
+              color: 'var(--color-text-secondary)',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Preview Mode
+          </Switch.Label>
+        </Switch.Root>
+      </AverageSidebar>
     </>
   );
 };

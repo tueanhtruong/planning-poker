@@ -3,7 +3,6 @@ import { useRef } from 'react';
 
 import { useConfig } from '@/modules/Config';
 import { SessionType } from '@/services';
-import { staggerChild, staggerContainer } from '@/styles/animations';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useVoteV2 } from '../hooks';
 import { getLastVote } from './helpers';
@@ -86,9 +85,9 @@ const InnerCardsGroup = ({
         maxWidth: '560px',
         width: '100%',
       }}
-      initial={{ opacity: 0, y: 32 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      // initial={{ opacity: 0, y: 32 }}
+      // animate={{ opacity: 1, y: 0 }}
+      // transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
       <Text
         textAlign={'center'}
@@ -112,9 +111,9 @@ const InnerCardsGroup = ({
           border: '1px solid var(--color-border)',
           borderRadius: 'var(--radius-lg)',
         }}
-        variants={staggerContainer}
-        initial="initial"
-        animate="animate"
+        // variants={staggerContainer}
+        // initial="initial"
+        // animate="animate"
       >
         <AnimatePresence>
           {data.cards.map((card, index) => {
@@ -125,7 +124,7 @@ const InnerCardsGroup = ({
                 ref={(element) => {
                   cardButtonRefs.current[index] = element;
                 }}
-                variants={staggerChild}
+                // variants={staggerChild}
                 whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ y: -1, scale: 0.98 }}
                 onClick={() => handleCardSelect(card)}
