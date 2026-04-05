@@ -1,5 +1,6 @@
 {
-  "name": "@tanstack/query-example-react-nextjs",
+  "name": "planning-poker-app",
+  "description": "A nextJs base planning poker application, with base NextJS, ChakraUI, TanStack Query, Firebase and more.",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,9 +13,6 @@
   "dependencies": {
     "@chakra-ui/react": "^3.16.1",
     "@emotion/react": "^11.14.0",
-    "@mantine/core": "^8.3.13",
-    "@mantine/dates": "^8.3.13",
-    "@mantine/hooks": "^8.3.13",
     "@tanstack/react-query": "^5.74.4",
     "@tanstack/react-query-devtools": "^5.74.6",
     "classnames": "^2.5.1",

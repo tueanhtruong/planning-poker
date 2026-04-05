@@ -2,7 +2,15 @@
 
 import { UserProfile } from '@/modules/User';
 import { UserType } from '@/services';
-import { Spinner, Stack, Switch, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Dialog,
+  Portal,
+  Spinner,
+  Stack,
+  Switch,
+  Text,
+} from '@chakra-ui/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -65,20 +73,32 @@ export const InnerRoomPlayGround = ({
 
   // This is used to prevent calling the joinRoom when user leaving room
   const calledJoinRoomRef = useRef(false);
+  const [showPreviewConfirm, setShowPreviewConfirm] = useState(false);
+
+  const applyTogglePreview = useCallback(
+    (nextPreview: boolean) => {
+      const query = { ...router.query };
+      if (nextPreview) {
+        query.preview = 'true';
+      } else {
+        delete query.preview;
+      }
+      router.replace({ pathname: router.pathname, query }, undefined, {
+        shallow: true,
+      });
+      joinRoom({ roomId: id, userId, preview: nextPreview });
+    },
+    [joinRoom, id, userId, router],
+  );
 
   const handleTogglePreview = useCallback(() => {
     const nextPreview = !isPreview;
-    const query = { ...router.query };
     if (nextPreview) {
-      query.preview = 'true';
+      setShowPreviewConfirm(true);
     } else {
-      delete query.preview;
+      applyTogglePreview(false);
     }
-    router.replace({ pathname: router.pathname, query }, undefined, {
-      shallow: true,
-    });
-    joinRoom({ roomId: id, userId, preview: nextPreview });
-  }, [isPreview, joinRoom, id, userId, router]);
+  }, [isPreview, applyTogglePreview]);
 
   useEffect(() => {
     if (!data) {
@@ -198,6 +218,60 @@ export const InnerRoomPlayGround = ({
           </Switch.Label>
         </Switch.Root>
       </AverageSidebar>
+
+      {/* Confirm switching to preview mode */}
+      <Dialog.Root
+        size={'sm'}
+        open={showPreviewConfirm}
+        onOpenChange={({ open }) => setShowPreviewConfirm(open)}
+        placement={'center'}
+      >
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content
+              style={{
+                background: 'var(--color-bg-surface)',
+                border: '1px solid var(--color-border)',
+                borderRadius: 'var(--radius-lg)',
+                boxShadow: 'var(--shadow-lg)',
+              }}
+            >
+              <Dialog.Header>
+                <Dialog.Title style={{ color: 'var(--color-text-primary)' }}>
+                  Switch to Preview Mode?
+                </Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Text style={{ color: 'var(--color-text-secondary)' }}>
+                  Switching to preview mode will clear your current vote. Are
+                  you sure you want to continue?
+                </Text>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Stack direction={'row'} gap={3} justifyContent={'flex-end'}>
+                  <Button
+                    colorPalette={'blue'}
+                    variant={'outline'}
+                    onClick={() => setShowPreviewConfirm(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    colorPalette={'blue'}
+                    onClick={() => {
+                      setShowPreviewConfirm(false);
+                      applyTogglePreview(true);
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                </Stack>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
     </>
   );
 };

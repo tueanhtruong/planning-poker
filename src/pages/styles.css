@@ -122,6 +122,20 @@
   --bgColor: #f6f8fa;
 }
 
+[data-theme='light'] .hero-badge {
+  color: #0e7490;
+  background: rgba(14, 116, 144, 0.08);
+  border-color: rgba(14, 116, 144, 0.3);
+}
+
+[data-theme='light'] .hero-badge-dot {
+  background: #0e7490;
+}
+
+[data-theme='light'] .hero-typewriter {
+  color: #0e7490;
+}
+
 [data-theme='light'] .hero-preview-card {
   background: linear-gradient(
     140deg,
