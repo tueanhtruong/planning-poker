@@ -222,6 +222,10 @@ const Player: FC<{
             fontWeight={'medium'}
             fontSize={'sm'}
             color={'var(--color-text-secondary)'}
+            maxWidth={130}
+            whiteSpace={'nowrap'}
+            overflow={'hidden'}
+            textOverflow={'ellipsis'}
           >
             {displayName}
           </Text>
