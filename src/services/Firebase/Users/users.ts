@@ -6,12 +6,18 @@ import { database } from '../database';
 export type UserType = {
   id: string;
   displayName: string;
+  photoURL?: string;
 };
 
-export const writeUserData = async ({ id, displayName }: UserType) => {
+export const writeUserData = async ({
+  id,
+  displayName,
+  photoURL,
+}: UserType) => {
   await set(ref(database, `users/${id}`), {
     id,
     displayName,
+    ...(photoURL ? { photoURL } : {}),
   });
 };
 

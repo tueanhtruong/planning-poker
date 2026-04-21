@@ -230,8 +230,9 @@ const Player: FC<{
               fontWeight={'bold'}
               fontSize={'sm'}
               className="player-voted-dot"
+              scale={1.6}
             >
-              • you
+              •
             </Text>
           ) : canSendEmoji ? (
             <Tooltip
@@ -266,19 +267,21 @@ const Player: FC<{
             </Tooltip>
           )}
         </Flex>
-        {/* Voted / waiting indicator dot */}
-        <div
-          style={{
-            width: '6px',
-            height: '6px',
-            borderRadius: '50%',
-            background: isVotedV2
-              ? 'var(--color-amber)'
-              : 'var(--color-text-muted)',
-            boxShadow: isVotedV2 ? 'var(--shadow-glow-amber)' : 'none',
-            transition: 'all 0.3s ease',
-          }}
-        />
+        {
+          // If the player has avatar, we will show the avatar here, but if not, we will show the default avatar with the first letter of the display name
+          userData?.photoURL ? (
+            <img
+              src={userData.photoURL}
+              alt={displayName}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
+                objectFit: 'cover',
+              }}
+            />
+          ) : undefined
+        }
       </Flex>
     </motion.div>
   );

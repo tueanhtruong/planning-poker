@@ -6,7 +6,7 @@ import { Spinner, Stack, Text } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useJoinRoom, useRoomInfo } from '../hooks';
+import { useJoinRoom, useLeaveRoom, useRoomInfo } from '../hooks';
 import { AverageSidebar } from './AverageSidebar';
 import { CardsGroup } from './CardsGroup';
 import { PreviewModeSwitch } from './PreviewModeSwitch';
@@ -59,8 +59,10 @@ export const InnerRoomPlayGround = ({
   preview,
   userId,
 }: RoomPlayGroundProps & { userId: string }) => {
+  const previousUserIdRef = useRef<string>();
   const { data } = useRoomInfo({ id });
   const { upsert: joinRoom } = useJoinRoom();
+  const { upsert: leaveRoom } = useLeaveRoom();
   const router = useRouter();
   const isPreview = router.query.preview === 'true';
 
@@ -92,6 +94,7 @@ export const InnerRoomPlayGround = ({
     // => if not, call the joinRoom function to add the user to the room
     if (!isUserInRoom || !calledJoinRoomRef.current) {
       joinRoom({ roomId: id, userId: userId, preview: isPreview });
+      previousUserIdRef.current = userId;
       calledJoinRoomRef.current = true;
       return;
     }
@@ -100,6 +103,16 @@ export const InnerRoomPlayGround = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  useEffect(() => {
+    // This is used to reset the calledJoinRoomRef when userId changes (e.g. user sign out and sign in with another account)
+    if (!previousUserIdRef.current) return;
+    if (previousUserIdRef.current !== userId) {
+      leaveRoom({ roomId: id, userId: previousUserIdRef.current });
+      joinRoom({ roomId: id, userId, preview: isPreview });
+      previousUserIdRef.current = userId;
+    }
+  }, [userId]);
 
   if (!data) {
     return (
