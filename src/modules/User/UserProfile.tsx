@@ -7,6 +7,7 @@ import { ModalAddNewUser } from './ModalAddNewUser';
 import { UserProfileDisplay } from './UserProfileDisplay';
 
 const DisplayUserProfile: FC<{
+  customDisplayText?: string;
   isLoading?: boolean;
   data?: UserType;
   isGoogleUser?: boolean;
@@ -20,12 +21,20 @@ const DisplayUserProfile: FC<{
   onGoogleSignOut,
   onCreate,
   onUpdate,
+  customDisplayText,
 }) => {
   if (isLoading) {
     return <Spinner size={'md'} />;
   }
   if (!data) {
-    return null;
+    // return null;
+    return (
+      <UserProfileDisplay
+        onCreate={onCreate}
+        onUpdate={onUpdate}
+        customDisplayText={customDisplayText}
+      />
+    );
   }
   if (isGoogleUser) {
     return (
@@ -56,6 +65,7 @@ export const UserProfile: FC<{ customDisplayText?: string }> = ({
     <>
       <Stack direction={'row'} alignItems={'center'}>
         <DisplayUserProfile
+          customDisplayText={customDisplayText}
           isLoading={isLoading}
           data={data}
           isGoogleUser={!!googleUser}
